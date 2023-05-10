@@ -28,18 +28,18 @@ Controller.signInController = async(req, res) => {
 //GET ALL THE STUDENTS(BUSCA TODOS OS ESTUDANTES)
 Controller.createStudentController = async (req, res) => {
     const {name, password, phone} = req.body
-    let allStudents = await createStudentBusiness(name, password, phone)
-    // console.log("=> ",allStudents)
-    res.status(200).json(allStudents)
+    let result = await createStudentBusiness(name, password, phone)
+    console.log("=> ",result)
+    res.status(result.status).json(result.msg)
 }
 
 
 //GET STUDENT BY REGISTRATION NUMBER(PEGA ESTUDANTE PELO NUMERO DE MATRICULA)
 Controller.getStudentByRegController = async (req, res) => {
     const {reg_id} = req
-    let student = await getStudentByRegBusiness(reg_id)
+    let result = await getStudentByRegBusiness(reg_id)
     // console.log("=> ",allStudents)
-    res.status(200).json(student)
+    res.status(result.status).json(result.msg)
 }
 
 module.exports = Controller

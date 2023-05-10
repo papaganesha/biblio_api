@@ -5,7 +5,7 @@ const Author = require("./Models/Authors.js")
 const Withdrawal = require("./Models/Withdrawals.js")
 
 
-console.log('\n===================================================== BibliAPI ======================================================')
+console.log('\n=============================================== BiblioAPI ================================================')
 
 //CREATE STUDENTS TABLE
 Student
@@ -21,5 +21,5 @@ Withdrawal
 
 
 App.listen(process.env.PORT || 3000, () => {
-    console.log(`Server rodando na porta 3000 ✔️`)
+    console.log(`Server running on port 3000 ✔️`)
 })
