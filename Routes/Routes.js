@@ -5,6 +5,7 @@ const API_URL = process.env.API_URL
 const isAuth = require('../Middlewares/Auth')
 
 const {
+    createBookController,
     getAllBooksController,
     getAllBooksByParamsController
 } = require('../Controllers/Books')
@@ -27,29 +28,55 @@ const {
      getAllAuthorsController 
 } = require('../Controllers/Authors');
 
-// RETURN ALL BOOKS
-Router.get(`${API_URL}/books`, isAuth, getAllBooksController)
+// ============= STUDENTS ===================================================================================================
 
-// RETURN BOOKS BY AUTHOR OR BOOK NAME
-Router.post(`${API_URL}/books`, isAuth, getAllBooksByParamsController)
+//CREATE NEW STUDENT
+Router.post(`${API_URL}/students`, createStudentController)
+
+//STUDENT AUTHENTICATION, RETURN JWT
+Router.post(`${API_URL}/signin`, signInController)
 
 
 //RETURN STUDENT INFO BY REGISTRATION NUMBER/REG_ID
 Router.get(`${API_URL}/students`, isAuth, getStudentByRegController)
 
-//CREATE NEW STUDENT
-Router.post(`${API_URL}/students`, createStudentController)
+// ============= STUDENTS ===================================================================================================
 
+
+// ============= BOOKS ======================================================================================================
+
+// CREATE NEW BOOK, ISBN, NAME, AUTHOR, PUBLISHER, PUBLI_DATE, STOCK AS PARAMETER
+Router.post(`${API_URL}/book`, createBookController)
+
+// RETURN ALL AVAILABLE BOOKS
+Router.get(`${API_URL}/books`, getAllBooksController)
+
+// RETURN BOOKS BY PARAM, NAME OR AUTHOR
+Router.post(`${API_URL}/books`, getAllBooksByParamsController)
+
+//============= BOOKS ======================================================================================================
+
+
+//============= AUTHORS ====================================================================================================
+
+//CREATE NEW AUTHOR, NAME AND COUNTRY AS PARAMETERS
+Router.post(`${API_URL}/authors`, createAuthorController)
+
+//GET ALL AUTHORS
+Router.get(`${API_URL}/authors`, getAllAuthorsController)
+
+// ============= AUTHORS ====================================================================================================
+
+
+
+// ============= WITHDRAWS AND GIVEBACK =====================================================================================
 Router.post(`${API_URL}/withdraw`, isAuth, createWithdrawalController)
 
 Router.get(`${API_URL}/withdraw`, isAuth, getAllWithdrawalsController)
 
 Router.post(`${API_URL}/giveback`, isAuth, givebackController)
+// ============= WITHDRAWS AND GIVEBACK =====================================================================================
 
-Router.post(`${API_URL}/signin`, signInController)
 
-
-Router.get(`${API_URL}/authors`, isAuth, getAllAuthorsController)
-Router.post(`${API_URL}/authors`, createAuthorController)
 
 module.exports = Router

@@ -7,16 +7,19 @@ BooksBusiness = {}
 
 //BooksBusiness.findAllStudents = async () => {}
 
-BooksBusiness.createBookBusiness = async (name, password, phone) => {
+BooksBusiness.createBookBusiness = async (isbn, name, author, publisher, publi_date, stock) => {
     const create = await BooksRepository.create({
+        isbn,
         name,
-        password,
-        phone
+        author,
+        publisher,
+        publi_date,
+        stock
     }).catch(err => {
-        return { msg: err.message.slice(18, err.message.length) }
+        return { status: 400, msg: err.message.slice(18, err.message.length) }
     })
 
-    return create
+    return {status: 201, msg: create}
 }
 
 // RETURNING ONLY AVAILABLE BOOKS, WHERE STOCK IS GREATHER THAN 0

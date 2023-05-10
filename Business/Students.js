@@ -21,10 +21,10 @@ StudentsBusiness.createStudentBusiness = async (name, password, phone) => {
         password,
         phone
     }).catch(err => {
-        return err.message
+        return {status: 400, msg: err.message}
     })
 
-    return create
+    return {status: 201, msg: create}
 }
 
 

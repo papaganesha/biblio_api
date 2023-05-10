@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "BiblioAPI",
-    "dateExported": "2023-05-10T20:18:58.838Z",
+    "dateExported": "2023-05-10T20:44:32.251Z",
     "version": "1.1",
     "folders": [],
     "requests": [
@@ -168,6 +168,25 @@
             "tests": []
         },
         {
+            "_id": "36d05ab8-8012-4409-a119-3210bae82e2e",
+            "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
+            "containerId": "",
+            "name": "Create new Student Copy",
+            "url": "http://localhost:3000/api/v1/students",
+            "method": "POST",
+            "sortNum": 32500,
+            "created": "2023-05-10T20:34:13.463Z",
+            "modified": "2023-05-10T20:34:13.464Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\":\"Joao Pedro\",\n  \"password\": \"12345678\",\n  \"phone\": \"51998196334\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
             "_id": "04e52a4b-bd67-4ff4-8f75-a58091007d82",
             "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
             "containerId": "",
@@ -190,22 +209,23 @@
             "_id": "fb1bf8c5-5824-4665-9194-d1ad8085cabd",
             "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
             "containerId": "",
-            "name": "Create Withdrawal",
-            "url": "http://localhost:3000/api/v1/withdraw",
+            "name": "Create Book",
+            "url": "http://localhost:3000/api/v1/book",
             "method": "POST",
             "sortNum": 40000,
             "created": "2023-05-08T12:31:38.072Z",
-            "modified": "2023-05-10T20:15:08.403Z",
+            "modified": "2023-05-10T20:44:15.880Z",
             "headers": [
                 {
                     "name": "Authorization",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4MzczMTUyOSwiZXhwIjoxNjgzODE3OTI5fQ.j4OnNnoXfEbR7c8byzTQfABLhHOsRBNgE390_nCJms0"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4MzczMTUyOSwiZXhwIjoxNjgzODE3OTI5fQ.j4OnNnoXfEbR7c8byzTQfABLhHOsRBNgE390_nCJms0",
+                    "isDisabled": true
                 }
             ],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"comment_1\": \"name as parameter\", \n  \"name\": \"TITAN\"\n}",
+                "raw": "{\n  \"comment_1\": \"ISBN, NAME, AUTHOR, PUBLISHER, PUBLI_DATE, STOCk AS PARAMETERS\", \n  \"isbn\": \"123912489\",\n  \"name\": \"Senhor dos aneiss\", \n  \"author\": \"Joao Pedro\", \n  \"publisher\": \"Capao Livros\", \n  \"publi_date\": \"2023-09-28\",\n  \"stock\":5\n}",
                 "form": []
             },
             "tests": []
