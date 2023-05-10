@@ -30,7 +30,9 @@ usuário ou cliente manipular o registro manualmente, etc.
 O objetivo desse trabalho é realizar um sistema Web que
 mantenha o controle dos livros de uma biblioteca, registrando
 retiradas e devoluções de livros pelos seus clientes.
-Solução
+
+*Solução*
+-
 Funcionalidades realizadas pelo bibliotecário:
 - Autenticação do usuário: usuário da biblioteca possui um
 usuário e uma senha para realizar autenticação (já pré-definidos
