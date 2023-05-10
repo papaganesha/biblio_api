@@ -1,24 +1,10 @@
 {
     "client": "Thunder Client",
     "collectionName": "BiblioAPI",
-    "dateExported": "2023-05-10T16:51:46.390Z",
+    "dateExported": "2023-05-10T20:18:58.838Z",
     "version": "1.1",
     "folders": [],
     "requests": [
-        {
-            "_id": "33ecd1cf-4482-4d36-ba84-804e324df597",
-            "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
-            "containerId": "",
-            "name": "Get All Students",
-            "url": "http://localhost:3000/api/v1/students",
-            "method": "GET",
-            "sortNum": 10000,
-            "created": "2023-05-08T00:08:24.419Z",
-            "modified": "2023-05-08T00:08:39.623Z",
-            "headers": [],
-            "params": [],
-            "tests": []
-        },
         {
             "_id": "c5a18c55-e047-43a1-88e4-d9c70b85d8e3",
             "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
@@ -28,8 +14,13 @@
             "method": "GET",
             "sortNum": 15000,
             "created": "2023-05-08T00:53:08.382Z",
-            "modified": "2023-05-08T00:53:21.345Z",
-            "headers": [],
+            "modified": "2023-05-10T19:02:48.944Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4Mzc0NTM1MiwiZXhwIjoxNjgzODMxNzUyfQ.DX6KPrrMthc46ATb8uNMQXL_NbTUnpoN9KbmAcRz9M4"
+                }
+            ],
             "params": [],
             "tests": []
         },
@@ -53,6 +44,25 @@
             "tests": []
         },
         {
+            "_id": "6a67a365-8c05-466e-adb2-ead19ebf93e6",
+            "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
+            "containerId": "",
+            "name": "Get All Authors",
+            "url": "http://localhost:3000/api/v1/authors",
+            "method": "GET",
+            "sortNum": 16562.5,
+            "created": "2023-05-10T20:06:30.081Z",
+            "modified": "2023-05-10T20:10:11.631Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4MzczMTEzMCwiZXhwIjoxNjgzODE3NTMwfQ.VZ5Qq5InMnTnsPRiXBYXCajgxeOcSIZAF7r8qo_nBQM"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
             "_id": "e3aa3bc9-7be3-48f6-90ea-c02ec6936fb5",
             "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
             "containerId": "",
@@ -61,12 +71,17 @@
             "method": "POST",
             "sortNum": 16875,
             "created": "2023-05-08T15:35:45.874Z",
-            "modified": "2023-05-10T14:25:49.151Z",
-            "headers": [],
+            "modified": "2023-05-10T20:15:48.929Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4MzczNzY3NCwiZXhwIjoxNjgzODI0MDc0fQ.lICCJqtSsX9oLn4maYJtpNolAU4DE0VKn6_PalQjDO4"
+                }
+            ],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"comment_1\": \"bookName and student_reg\",\n  \"bookName\": \"UN EPISODIO EN LA VIDA DEL PINTOR VIAJERO\",\n  \"student_reg\": \"33a9f04c-64f7-4959-82c2-356da76e567f\"\n}",
+                "raw": "{\n  \"comment_1\": \"bookName\",\n  \"bookName\": \"TITAN\"\n}",
                 "form": []
             },
             "tests": []
@@ -99,12 +114,17 @@
             "method": "POST",
             "sortNum": 17500,
             "created": "2023-05-08T01:05:44.155Z",
-            "modified": "2023-05-08T23:50:29.752Z",
-            "headers": [],
+            "modified": "2023-05-10T20:14:36.904Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4MzczMTEzMCwiZXhwIjoxNjgzODE3NTMwfQ.VZ5Qq5InMnTnsPRiXBYXCajgxeOcSIZAF7r8qo_nBQM"
+                }
+            ],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"comment_1\": \"author or name\",\n  \"author\": \"Aaron Dembski Bowden\"\n}",
+                "raw": "{\n  \"comment_1\": \"author or name\",\n  \"author\": \"Ben Bova\"\n}",
                 "form": []
             },
             "tests": []
@@ -114,12 +134,17 @@
             "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
             "containerId": "",
             "name": "Get Student by Reg_ID",
-            "url": "http://localhost:3000/api/v1/students/sss",
+            "url": "http://localhost:3000/api/v1/students",
             "method": "GET",
             "sortNum": 20000,
             "created": "2023-05-08T00:21:11.381Z",
-            "modified": "2023-05-08T00:22:09.664Z",
-            "headers": [],
+            "modified": "2023-05-10T16:55:25.976Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4MzczNzY3NCwiZXhwIjoxNjgzODI0MDc0fQ.lICCJqtSsX9oLn4maYJtpNolAU4DE0VKn6_PalQjDO4"
+                }
+            ],
             "params": [],
             "tests": []
         },
@@ -143,6 +168,25 @@
             "tests": []
         },
         {
+            "_id": "04e52a4b-bd67-4ff4-8f75-a58091007d82",
+            "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
+            "containerId": "",
+            "name": "Create Author",
+            "url": "http://localhost:3000/api/v1/authors",
+            "method": "POST",
+            "sortNum": 35000,
+            "created": "2023-05-10T19:20:53.933Z",
+            "modified": "2023-05-10T19:36:15.129Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"name and country as parameters\",\n  \"name\":\"Joao Pedroo\",\n  \"country\": \"Brazil\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
             "_id": "fb1bf8c5-5824-4665-9194-d1ad8085cabd",
             "colId": "cfb8271e-ced0-4ec7-963f-4e4926733f82",
             "containerId": "",
@@ -151,7 +195,7 @@
             "method": "POST",
             "sortNum": 40000,
             "created": "2023-05-08T12:31:38.072Z",
-            "modified": "2023-05-10T15:12:20.808Z",
+            "modified": "2023-05-10T20:15:08.403Z",
             "headers": [
                 {
                     "name": "Authorization",
@@ -161,7 +205,7 @@
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"comment_1\": \"name as parameter\", \n  \"name\": \"INFLUENCIA\"\n}",
+                "raw": "{\n  \"comment_1\": \"name as parameter\", \n  \"name\": \"TITAN\"\n}",
                 "form": []
             },
             "tests": []

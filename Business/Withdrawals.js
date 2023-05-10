@@ -91,7 +91,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
 }
 
 WithdrawalsBusiness.getAllWithdrawalsBusiness = async (reg_id) => {
-    const withdrawals = await WithdrawalsRepository.findAll({where:{student_reg: reg_id}});
+    const withdrawals = await WithdrawalsRepository.findAll({ where: { student_reg: reg_id } });
     if (withdrawals == null || withdrawals.length == 0) {
         return "Not a single withdrawal registered"
     }
@@ -173,105 +173,103 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, reg_id) => {
             reg_id: reg_id,
         }
     }).catch(err => {
-        return { status:400, msg: err.message.slice(18, err.message.length) }
+        return { status: 400, msg: err.message.slice(18, err.message.length) }
     })
 
 
-        //CHECK IF BOOK EXISTS
-        const book = await BooksRepository.findOne({
+    //CHECK IF BOOK EXISTS
+    const book = await BooksRepository.findOne({
+        where: {
+            name: bookName,
+        }
+    }).catch(err => {
+        return { status: 400, msg: err.message.slice(18, err.message.length) }
+    })
+
+    if (book == null) {
+        return { status: 400, msg: 'Inexistent book' }
+    }
+    else {
+        const withdrawal = await WithdrawalsRepository.findOne({
             where: {
-                name: bookName,
+                student_reg: reg_id,
+                book_isbn: book.isbn,
+                giveback_date: null
             }
         }).catch(err => {
-            return { status:400, msg: err.message.slice(18, err.message.length) }
+            return { status: 400, msg: err.message.slice(18, err.message.length) }
         })
 
-        if (book == null) {
-            return { status:400, msg: 'Inexistent book' }
+        //console.log("==> ", withdrawal)
+
+        if (withdrawal == null || withdrawal.length == 0) {
+            return { status: 400, msg: "Not a single withdrawal registered for this student" }
         }
         else {
-            const withdrawals = await WithdrawalsRepository.findAll({
-                where: {
-                    student_reg: reg_id,
-                    book_isbn: book.isbn,
-                    giveback_date: null
+            if (withdrawal.giveback_date == null && withdrawal.done == 0) {
+                //CALCULATE DIFF BETWEEN RETURN_DATE AND GIVEBACK_DATE
+                let now = new Date().toISOString()
+                let diference = daysBetween(withdrawal.return_date, now)
+                console.log("==> ", parseInt(diference))
+                if (diference > 0) {
+                    const updateWithdrawal = await WithdrawalsRepository.update(
+                        { giveback_date: now, late: parseInt(diference), done: 1 },
+                        { where: { book_isbn: book.isbn } }
+                    ).catch(err => {
+                        console.log(err.message.slice(18, err.message.length))
+                        return { status: 400, msg: err.message.slice(18, err.message.length) }
+                    })
+
+                    const updateStudent = await StudentsRepository.update(
+                        { withdraw: student.withdraw - 1 },
+                        { where: { reg_id: student.reg_id } }
+                    ).catch(err => {
+                        console.log(err.message.slice(18, err.message.length))
+                        return { status: 400, msg: err.message.slice(18, err.message.length) }
+                    })
+
+                    const updateBook = await BooksRepository.update(
+                        { stock: book.stock + 1 },
+                        { where: { isbn: book.isbn } }
+                    ).catch(err => {
+                        console.log(err.message.slice(18, err.message.length))
+                        return { msg: err.message.slice(18, err.message.length) }
+                    })
+
+                    return { status: 201, msg: `Book returned with ${diference} late` }
                 }
-            }).catch(err => {
-                return { status:400, msg: err.message.slice(18, err.message.length) }
-            })
+                else {
+                    const updateWithdrawal = await WithdrawalsRepository.update(
+                        { giveback_date: now, late: 0, done: 1 },
+                        { where: { book_isbn: book.isbn } }
+                    ).catch(err => {
+                        console.log(err.message.slice(18, err.message.length))
+                        return { status: 400, msg: err.message.slice(18, err.message.length) }
+                    })
 
-            //console.log("==> ", withdrawal)
+                    const updateStudent = await StudentsRepository.update(
+                        { withdraw: student.withdraw - 1 },
+                        { where: { reg_id: student.reg_id } }
+                    ).catch(err => {
+                        console.log(err.message.slice(18, err.message.length))
+                        return { status: 400, msg: err.message.slice(18, err.message.length) }
+                    })
 
-            if (withdrawals == null || withdrawals.length == 0) {
-                return {status: 400, msg: "Not a single withdrawal registered for this student"}
+                    const updateBook = await BooksRepository.update(
+                        { stock: book.stock + 1 },
+                        { where: { isbn: book.isbn } }
+                    ).catch(err => {
+                        console.log(err.message.slice(18, err.message.length))
+                        return { status: 400, msg: err.message.slice(18, err.message.length) }
+                    })
+
+                    return { status: 201, msg: 'Book returned with no late' }
+                }
             }
             else {
-                // console.log(withdrawal.giveback_date)
-                // if(withdrawal.giveback_date == null && withdrawal.done == 0) {
-                //     //CALCULATE DIFF BETWEEN RETURN_DATE AND GIVEBACK_DATE
-                // let now = new Date().toISOString()
-                // let diference = daysBetween(withdrawal.return_date, now)
-                // console.log("==> ", parseInt(diference))
-                // if (diference > 0) {
-                //     const updateWithdrawal = await WithdrawalsRepository.update(
-                //         { giveback_date: now, late: parseInt(diference), done: 1  },
-                //         { where: { book_isbn: book.isbn } }
-                //     ).catch(err => {
-                //         console.log(err.message.slice(18, err.message.length))
-                //         return { status: 400, msg: err.message.slice(18, err.message.length) }
-                //     })
-
-                //     const updateStudent = await StudentsRepository.update(
-                //         { withdraw: student.withdraw - 1},
-                //         { where: { reg_id: student.reg_id } }
-                //     ).catch(err => {
-                //         console.log(err.message.slice(18, err.message.length))
-                //         return { status: 400, msg: err.message.slice(18, err.message.length) }
-                //     })
-
-                //     const updateBook = await BooksRepository.update(
-                //         { stock: book.stock + 1},
-                //         { where: { isbn: book.isbn } }
-                //     ).catch(err => {
-                //         console.log(err.message.slice(18, err.message.length))
-                //         return { msg: err.message.slice(18, err.message.length) }
-                //     })
-
-                //     return { status:201, msg: `Book returned with ${diference} late` }
-                // }
-                // else {
-                //     const updateWithdrawal = await WithdrawalsRepository.update(
-                //         { giveback_date: now, late: 0, done: 1 },
-                //         { where: { book_isbn: book.isbn } }
-                //     ).catch(err => {
-                //         console.log(err.message.slice(18, err.message.length))
-                //         return { status:400,  msg: err.message.slice(18, err.message.length) }
-                //     })
-
-                //     const updateStudent = await StudentsRepository.update(
-                //         { withdraw: student.withdraw - 1},
-                //         { where: { reg_id: student.reg_id } }
-                //     ).catch(err => {
-                //         console.log(err.message.slice(18, err.message.length))
-                //         return { status:400, msg: err.message.slice(18, err.message.length) }
-                //     })
-
-                //     const updateBook = await BooksRepository.update(
-                //         { stock: book.stock + 1},
-                //         { where: { isbn: book.isbn } }
-                //     ).catch(err => {
-                //         console.log(err.message.slice(18, err.message.length))
-                //         return { status:400, msg: err.message.slice(18, err.message.length) }
-                //     })
-                    
-                //     return { status:201, msg: 'Book returned with no late' }
-                // }
-                // }
-                // else{
-                //     return { status:201, msg: 'Already returned book' }
-                // }   
-                return{status: 200, msg: withdrawals}
+                return { status: 201, msg: 'Already returned book' }
             }
+        }
     }
 
 }

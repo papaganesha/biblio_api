@@ -18,5 +18,14 @@ AuthorsBusiness.createAuthorBusiness = async (name, country) => {
     return {status: 201, msg: create}
 }
 
+AuthorsBusiness.getAllAuthorsBusiness = async () => {
+    const result = await AuthorsRepository.findAll()
+    .catch(err => {
+            return { status: 400, msg: err.name}
+    })
+
+    return {status: 200, msg: result}
+}
+
 
 module.exports = AuthorsBusiness
