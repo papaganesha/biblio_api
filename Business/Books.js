@@ -19,8 +19,13 @@ BooksBusiness.createBookBusiness = async (name, password, phone) => {
     return create
 }
 
+// RETURNING ONLY AVAILABLE BOOKS, WHERE STOCK IS GREATHER THAN 0
 BooksBusiness.getAllBooksBusiness = async () => {
-    const books = await BooksRepository.findAll();
+    const books = await BooksRepository.findAll({where:{
+        stock:{
+            [Op.gt]: 0
+          }
+    }})
     console.log("=> ", books)
     if (books == null || books.length == 0) {
         return "Not a single book registered"

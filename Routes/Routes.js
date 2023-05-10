@@ -20,7 +20,11 @@ const {
     createWithdrawalController,
     getAllWithdrawalsController,
     givebackController
-} = require('../Controllers/Withdrawals')
+} = require('../Controllers/Withdrawals');
+
+const {
+     createAuthorController 
+} = require('../Controllers/Authors');
 
 // RETURN ALL BOOKS
 Router.get(`${API_URL}/books`, isAuth, getAllBooksController)
@@ -42,5 +46,7 @@ Router.get(`${API_URL}/withdraw`, isAuth, getAllWithdrawalsController)
 Router.post(`${API_URL}/giveback`, isAuth, givebackController)
 
 Router.post(`${API_URL}/signin`, signInController)
+
+Router.post(`${API_URL}/authors`, createAuthorController)
 
 module.exports = Router
