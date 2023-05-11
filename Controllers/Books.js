@@ -12,7 +12,7 @@ var Controller = {}
 
 //CREATE A NEW BOOK
 Controller.createBookController = async (req, res) => {
-    const {isbn, name, author, publisher, publi_date, stock} = req.params
+    const {isbn, name, author, publisher, publi_date, stock} = req.body
     let result = await createBookBusiness(isbn, name, author, publisher, publi_date, stock)
     // console.log("=> ",allBooks)
     res.status(result.status).json(result.msg)
@@ -20,9 +20,9 @@ Controller.createBookController = async (req, res) => {
 
 //GET ALL THE STUDENTS(BUSCA TODOS OS ESTUDANTES)
 Controller.getAllBooksController = async (req, res) => {
-    let allBooks = await getAllBooksBusiness()
+    let result = await getAllBooksBusiness()
     // console.log("=> ",allBooks)
-    res.status(200).json(allBooks)
+    res.status(result.status).json(result.msg)
 }
 
 

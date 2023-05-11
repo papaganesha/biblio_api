@@ -1,4 +1,4 @@
-const dfd = require('danfojs-node')
+const dfd = require('danfojs')
 
 // 'C:/Users/senacrs/Desktop/biblio_api/Scripts/dados/books.csv'
 

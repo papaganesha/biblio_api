@@ -24,17 +24,17 @@ StudentsBusiness.createStudentBusiness = async (name, password, phone) => {
         //RETURN 1 IN CASE STUDENT PHONE ALREADY EXISTS
         //RETURN 2 IN CASE OF OTHER ERROR
         if(err.name == 'SequelizeUniqueConstraintError'){
-            return 1
+            return {flag: 1, status: 400, msg: 'Student with this phone already exists'}
         }else{
-            return 2
+            return {flag: 2, status: 400, msg: 'Error while creating Student, try again'}
         }
     })
 
-    if(create == 1 || create == 2){
-        if(create == 1){
-            return {status: 201, msg: 'Student with this phone already exists'}
+    if(create.flag != null){
+        if(create.flag == 1){
+            return {status: create.status, msg: create.msg}
         }else{
-            return {status: 201, msg: 'Error while creating Student, try again'}
+            return {status: create.status, msg: create.msg}
         }
     }else{
         return {status: 201, msg: create.reg_id}

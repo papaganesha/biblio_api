@@ -16,10 +16,25 @@ BooksBusiness.createBookBusiness = async (isbn, name, author, publisher, publi_d
         publi_date,
         stock
     }).catch(err => {
-        return { status: 400, msg: err.message.slice(18, err.message.length) }
+        //RETURN 1 CASE ISBN ALREADY REGISTERES
+        //RETURN 2 ANY OTHER ERRO
+        if(err.name == 'SequelizeUniqueConstraintError'){
+            return {flag: 1, status: 400, msg: 'Book with this ISBN already exists'}
+        }else if(err.name == 'SequelizeConnectionRefusedError'){
+            return {flag: 2, status: 400, msg: 'Connection with DB error'}
+        }
+        
     })
 
-    return {status: 201, msg: create}
+    if(create.flag != null){
+        if(create.flag == 1){
+            return {status: create.status, msg: create.msg}
+        }else{
+            return {status: create.status, msg: create.msg}
+        }
+    }else{
+        return {status: 201, msg: create.isbn}
+    }
 }
 
 // RETURNING ONLY AVAILABLE BOOKS, WHERE STOCK IS GREATHER THAN 0
@@ -28,13 +43,23 @@ BooksBusiness.getAllBooksBusiness = async () => {
         stock:{
             [Op.gt]: 0
           }
-    }})
-    console.log("=> ", books)
+    }}).catch(err => {
+        if(err.name == 'SequelizeConnectionRefusedError'){
+            return {status: 400, msg: 'Connection with DB error'}
+        }else{
+            return {status: 400, msg: err.message}
+        }
+        
+    })
+    console.log(books.length)
     if (books == null || books.length == 0) {
-        return "Not a single book registered"
+        return {status: 200, msg: "Not a single book registered"}
+    }
+    else if(books.status == 400){
+        return {status: books.status, msg: books.msg}
     }
     else {
-        return books
+        return {status: 200, msg: books}
     }
 }
 
