@@ -18,7 +18,6 @@ Controller.signInController = async(req, res) => {
     let result = await signInBusiness(reg_id, password)
     if(result.status == 202){
         res.status(result.status).json(result.token)
-
     }else{
         res.status(result.status).json(result.msg)
     }
@@ -29,7 +28,6 @@ Controller.signInController = async(req, res) => {
 Controller.createStudentController = async (req, res) => {
     const {name, password, phone} = req.body
     let result = await createStudentBusiness(name, password, phone)
-    console.log("=> ",result)
     res.status(result.status).json(result.msg)
 }
 
@@ -38,7 +36,6 @@ Controller.createStudentController = async (req, res) => {
 Controller.getStudentByRegController = async (req, res) => {
     const {reg_id} = req
     let result = await getStudentByRegBusiness(reg_id)
-    // console.log("=> ",allStudents)
     res.status(result.status).json(result.msg)
 }
 

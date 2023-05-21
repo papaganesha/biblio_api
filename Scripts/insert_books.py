@@ -52,7 +52,8 @@ def insert_books(books_nbr):
         publisher = lin.editorial
         publi_date = lin.date_edition
         img_url = lin.image
-        stock = random.randint(1, 9)
+        #INSERT 2 TO 9 BOOKS
+        stock = random.randint(2, 9)
         data_book = (isbn, title, author, publisher, publi_date, stock, img_url)
         data_author = (str(uuid.uuid4()), author, 'Brazil')
 

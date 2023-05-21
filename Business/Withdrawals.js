@@ -12,49 +12,111 @@ const { addWeeksToDate, daysBetween } = require("../Services/Date.js")
 WithdrawalsBusiness = {}
 
 
+//CREATE A NEW WITHDRAW: REQUIRED PARAMS(BOOKNAME, REGID)
+//CHECK IF BOOK WITH BOOKNAME EXISTS AND HAS STOCK
+//CHECK IF STUDENT CAN WITHDRAW
+//CHECK IF STUDENT DOENST HAVE ANY OPEN WITHDRAWS FOR THE REQUIRED BOOK
+//REGISTER WITHDRAW
+//RETURN STATUS AND MESSAGES
 WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
-    //CHECK FOR BOOK STOCK
-    const book = await BooksRepository.findOne({ where: { name: bookName } })
-        .catch(err => {
-            console.log(err.message.slice(18, err.message.length))
-        })
-
-
-
-    // CASE BOOK DOENST EXISTS
-    if (book == null || book.length == 0) {
-        return { msg: "Inexistent book" }
-    } else {
-        // CASE BOOK DOENTS HAVE STOCK
-        if (book.stock == 0) {
-            return { msg: "Unavailable book" }
+    //CHECK PARAMETERS
+    if (bookName && regId) {
+        //CREATE VARIABLE TO CALL REPOSITORES
+        let book
+        try {
+            //GET ONE BOOK WHERE BOOK.NAME = BOOKNAME REQUIRED PARAMETER
+            book = await BooksRepository.findOne({ where: { name: bookName } })
         }
-    }
+        //IN CASE OF ERROR
+        //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+        catch (err) {
+            if (err.name == 'SequelizeConnectionRefusedError') {
+                return { status: 400, msg: 'Connection with DB error' }
+            }
+            else {
+                return { status: 400, msg: 'Error while searching Book, try again' }
+            }
+        }
+        // CASE BOOK DOENST EXISTS
+        if (book == null || book.length == 0) {
+            return { status: 400, msg: "Inexistent book" }
+        }
+        else {
+            // CASE BOOK DOENTS HAVE STOCK
+            if (book.stock == 0) {
+                return { status: 400, msg: "Unavailable book" }
+            }
+        }
 
-    //CHECK FOR STUDENT WITHDRAWALS NBR
-    const student = await StudentsRepository.findOne({ where: { reg_id: regId } })
-        .catch(err => {
-            return { msg: err.message.slice(18, err.message.length) }
-        })
+        //CHECK IF STUDENT DOESNT HAVE ANY WITHDRAWS FOR THIS BOOK
+        //CREATE VARIABLE TO CALL REPOSITORES
+        let withdrawal
+        try {
+            //GET WITHDRAWS WHERE STUDENT_REG = REGID AND BOOK_ISBN = BOOK.ISBN
+            withdrawal = await WithdrawalsRepository.findOne({
+                where: {
+                    student_reg: regId,
+                    book_isbn: book.isbn
+                }
+            })
+        }
+        //IN CASE OF ERROR
+        //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+        catch (err) {
+            if (err.name == 'SequelizeConnectionRefusedError') {
+                return { status: 400, msg: 'Connection with DB error' }
+            }
+            else {
+                return { status: 400, msg: 'Error while searching Withdraws, try again' }
+            }
+        }
 
+        //IN CASE STUDENT ALREADY HAS WITHDRAW FOR THIS BOOK
+        if (withdrawal != null && withdrawal.giveback_date == null) {
+            return { status: 400, msg: "Student cant withdraw the same book twice." }
+        }
 
-    //console.log(book)
-    if (student == null || student.length == 0) {
-        return { msg: "Inexistent student" }
-    } else {
+        //CHECK FOR STUDENT WITHDRAWALS NBR
+        //CREATE VARIABLE TO CALL REPOSITORES
+        let student
+        try {
+            student = await StudentsRepository.findOne({ where: { reg_id: regId } })
+        }
+        //IN CASE OF ERROR
+        //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+        catch (err) {
+            if (err.name == 'SequelizeConnectionRefusedError') {
+                return { status: 400, msg: 'Connection with DB error' }
+            }
+            else {
+                return { status: 400, msg: 'Error while searching Student info, try again' }
+            }
+        }
+
         if (student.withdraw > 0 && student.withdraw >= 3) {
-            return { msg: "Student cant withdraw no more" }
+            return { status: 400, msg: "Student cant withdraw no more" }
         } else {
             //CREATE NEW WITHDRAWAL
-            const create = await WithdrawalsRepository.create({
-                book_isbn: book.isbn,
-                student_reg: student.reg_id,
-                start_date: new Date().toISOString(),
-                return_date: addWeeksToDate(new Date(), 1).toISOString()
-            }).catch(err => {
-                //console.log(err.message.slice(18, err.message.length))
-                return { msg: err.message.slice(18, err.message.length) }
-            })
+            //CREATE VARIABLE TO CALL REPOSITORES
+            let create
+            try {
+                create = await WithdrawalsRepository.create({
+                    book_isbn: book.isbn,
+                    student_reg: student.reg_id,
+                    start_date: new Date().toISOString(),
+                    return_date: addWeeksToDate(new Date(), 1).toISOString()
+                })
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                }
+                else {
+                    return { status: 400, msg: 'Error while creating Withdrawal, try again' }
+                }
+            }
 
 
             console.log(`=> ${new Date().toISOString()} => ${addWeeksToDate(new Date(), 1).toISOString()}`)
@@ -62,101 +124,88 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             console.log(`=> create => ${create.affectedRows}`)
             //REMOVE STOCK FROM BOOK
             let newStock = book.stock - 1
-            const updateBook = await BooksRepository.update(
-                { stock: newStock },
-                { where: { isbn: book.isbn } }
-            ).catch(err => {
-                console.log(err.message.slice(18, err.message.length))
-                return { msg: err.message.slice(18, err.message.length) }
-            })
+            //CREATE VARIABLE TO CALL REPOSITORES
+            let updateBook
+            try {
+                updateBook = await BooksRepository.update(
+                    { stock: newStock },
+                    { where: { isbn: book.isbn } }
+                )
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                }
+                else {
+                    return { status: 400, msg: 'Error while updating Book, try again' }
+                }
+            }
 
 
             //ADD WITHDRAW TO STUDENT
             let newWithDraw = student.withdraw + 1
-            const updateStudent = await StudentsRepository.update(
-                { withdraw: newWithDraw },
-                { where: { reg_id: student.reg_id } }
-            ).catch(err => {
-                console.log(err.message.slice(18, err.message.length))
-                return { msg: err.message.slice(18, err.message.length) }
-            })
+            //CREATE VARIABLE TO CALL REPOSITORES
+            let updateStudent
+            try {
+                updateStudent = await StudentsRepository.update(
+                    { withdraw: newWithDraw },
+                    { where: { reg_id: student.reg_id } }
+                )
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                }
+                else {
+                    return { status: 400, msg: 'Error while updating Student, try again' }
+                }
+            }
 
+            //NEED TO CHECK IF ONE OF THOSE IS NOT GOOD, WHAT TO DO?
             if (updateBook && updateStudent) {
-                return { msg: "Withdrawal registered" }
+                return { status: 201, msg: "Withdrawal registered" }
             }
 
         }
+
+    }
+    //MISSING PARAMETERS
+    else {
+        return { status: 400, msg: 'Missing parameters, try again' }
     }
 
 }
 
 WithdrawalsBusiness.getAllWithdrawalsBusiness = async (reg_id) => {
-    const withdrawals = await WithdrawalsRepository.findAll({ where: { student_reg: reg_id } });
+    let withdrawals
+    try {
+        withdrawals = await WithdrawalsRepository.findAll({ where: { student_reg: reg_id } })
+    }
+    catch (err) {
+        if (err.name == 'SequelizeConnectionRefusedError') {
+            return { status: 400, msg: 'Connection with DB error' }
+        }
+        else {
+            return { status: 400, msg: 'Error while getting Withdraws, try again' }
+        }
+    }
+
     if (withdrawals == null || withdrawals.length == 0) {
-        return "Not a single withdrawal registered"
+        return { status: 400, msg: "Not a single withdrawal registered" }
     }
     else {
-        return withdrawals
+        return { status: 400, msg: withdrawals }
     }
 }
 
 
-// WithdrawalsBusiness.getAllWithdrawalsByIdBusiness = async () => {
-//     const withdrawals = await WithdrawalsRepository.findAll();
-//     if (withdrawals == null || withdrawals.length == 0) {
-//         // return "Not a single withdrawal registered"
-//         return 
-//     }
-//     else {
-//         return withdrawals
-//     }
-// }
-
-// WithdrawalsBusiness.getAllWithdrawalsByIdBusiness = async (withdrawal_id) => {
-//     const withdrawals = await WithdrawalsRepository.findAll({
-//         where: {
-//             withdrawal_id: withdrawal_id,
-//         }
-//     })
-
-//     if (withdrawals == null || withdrawals.length == 0) {
-//         return "Inexistent withdrawal"
-//     }
-//     else {
-//         return withdrawals
-//     }
-// }
-
-// WithdrawalsBusiness.getAllWithdrawalsByRegIdBusiness = async (student_reg) => {
-//     // CHECK STUDENT
-//     const student = await StudentsRepository.findOne({
-//         where: {
-//             reg_id: student_reg,
-//         }
-//     }).catch(err => {
-//         return {msg: err.message.slice(18, err.message.length)}
-//     })
-
-//     if(student == null){
-//         return {msg :"Inexistent student"}
-//     }
-//     const withdrawals = await WithdrawalsRepository.findAll({
-//         where: {
-//             student_reg: student_reg,
-//         }
-//     })
-
-//     if (withdrawals == null || withdrawals.length == 0) {
-//         return "Not a single withdrawal registered for this student"
-//     }
-//     else {
-//         return withdrawals
-//     }
-// }
 
 
-// RETURN A BOOK
-// PARAMS: BOOKS.BOOK_NAME, STUDENTS.REG_ID
+// RETURNS A BOOK: REQUIRED PARAMS(BOOKS.BOOK_NAME, STUDENTS.REG_ID)
 // DONT NEED CHECK IF USER EXISTS, BECAUSE OF AUTH
 // GET USER OBJECT WITH STUDENTS.REG_ID AND EXTRACT WITHDRAW VALUE
 // FIND BOOKS.ISBN AND BOOKS.STOCK WITH BOOKNAME
@@ -164,114 +213,218 @@ WithdrawalsBusiness.getAllWithdrawalsBusiness = async (reg_id) => {
 // GET WITHDRAW ROW WITH ISBN AND REG_ID
 // CREATE NOW DATE
 // COMPARE WITHDRAW.RETURN_DATE WITH NOW DATE, TO CALCULATE LATE DAYS
-// ERRORS: IF USER HAS 2 WITHDRAWS OF THE SAME BOOK, WHEN HE DOES GIVEBACK, BOTH ARE FINISHED
-// ERRORS: IF USER HAS 2 WITHDRAWS OF THE SAME BOOK, ONE ALREADY FINISHED, WHEN HE DOES GIVEBACK, CANT VERIFY WHAT ROW TO REDEFINE
-WithdrawalsBusiness.givebackBusiness = async (bookName, reg_id) => {
-    // CHECK STUDENT
-    const student = await StudentsRepository.findOne({
-        where: {
-            reg_id: reg_id,
+// UPDATE WITHDRAWS, STUDENT AND BOOKS
+// RETURN STATUS AND MESSAGES
+WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
+    //CHECK STUDENT
+    //CREATE VARIABLE TO CALL REPOSITORES
+    let student
+    try {
+        //GET STUDENT WHERE STUDENT.REG_ID = REGID
+        student = await StudentsRepository.findOne({
+            where: {
+                reg_id: regId,
+            }
+        })
+    }
+    //IN CASE OF ERROR
+    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+    catch (err) {
+        if (err.name == 'SequelizeConnectionRefusedError') {
+            return { status: 400, msg: 'Connection with DB error' }
         }
-    }).catch(err => {
-        return { status: 400, msg: err.message.slice(18, err.message.length) }
-    })
+        else {
+            return { status: 400, msg: 'Error while getting Student, try again' }
+        }
+    }
 
 
     //CHECK IF BOOK EXISTS
-    const book = await BooksRepository.findOne({
-        where: {
-            name: bookName,
-        }
-    }).catch(err => {
-        return { status: 400, msg: err.message.slice(18, err.message.length) }
-    })
-
-    if (book == null) {
-        return { status: 400, msg: 'Inexistent book' }
-    }
-    else {
-        const withdrawal = await WithdrawalsRepository.findOne({
+    //CREATE VARIABLE TO CALL REPOSITORES
+    let book
+    try {
+        book = await BooksRepository.findOne({
             where: {
-                student_reg: reg_id,
-                book_isbn: book.isbn,
-                giveback_date: null
+                name: bookName,
             }
-        }).catch(err => {
-            return { status: 400, msg: err.message.slice(18, err.message.length) }
         })
-
-        //console.log("==> ", withdrawal)
-
-        if (withdrawal == null || withdrawal.length == 0) {
-            return { status: 400, msg: "Not a single withdrawal registered for this student" }
+    }
+    //IN CASE OF ERROR
+    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+    catch (err) {
+        if (err.name == 'SequelizeConnectionRefusedError') {
+            return { status: 400, msg: 'Connection with DB error' }
         }
         else {
-            if (withdrawal.giveback_date == null && withdrawal.done == 0) {
-                //CALCULATE DIFF BETWEEN RETURN_DATE AND GIVEBACK_DATE
-                let now = new Date().toISOString()
-                let diference = daysBetween(withdrawal.return_date, now)
-                console.log("==> ", parseInt(diference))
-                if (diference > 0) {
-                    const updateWithdrawal = await WithdrawalsRepository.update(
-                        { giveback_date: now, late: parseInt(diference), done: 1 },
-                        { where: { book_isbn: book.isbn } }
-                    ).catch(err => {
-                        console.log(err.message.slice(18, err.message.length))
-                        return { status: 400, msg: err.message.slice(18, err.message.length) }
-                    })
-
-                    const updateStudent = await StudentsRepository.update(
-                        { withdraw: student.withdraw - 1 },
-                        { where: { reg_id: student.reg_id } }
-                    ).catch(err => {
-                        console.log(err.message.slice(18, err.message.length))
-                        return { status: 400, msg: err.message.slice(18, err.message.length) }
-                    })
-
-                    const updateBook = await BooksRepository.update(
-                        { stock: book.stock + 1 },
-                        { where: { isbn: book.isbn } }
-                    ).catch(err => {
-                        console.log(err.message.slice(18, err.message.length))
-                        return { msg: err.message.slice(18, err.message.length) }
-                    })
-
-                    return { status: 201, msg: `Book returned with ${diference} late` }
-                }
-                else {
-                    const updateWithdrawal = await WithdrawalsRepository.update(
-                        { giveback_date: now, late: 0, done: 1 },
-                        { where: { book_isbn: book.isbn } }
-                    ).catch(err => {
-                        console.log(err.message.slice(18, err.message.length))
-                        return { status: 400, msg: err.message.slice(18, err.message.length) }
-                    })
-
-                    const updateStudent = await StudentsRepository.update(
-                        { withdraw: student.withdraw - 1 },
-                        { where: { reg_id: student.reg_id } }
-                    ).catch(err => {
-                        console.log(err.message.slice(18, err.message.length))
-                        return { status: 400, msg: err.message.slice(18, err.message.length) }
-                    })
-
-                    const updateBook = await BooksRepository.update(
-                        { stock: book.stock + 1 },
-                        { where: { isbn: book.isbn } }
-                    ).catch(err => {
-                        console.log(err.message.slice(18, err.message.length))
-                        return { status: 400, msg: err.message.slice(18, err.message.length) }
-                    })
-
-                    return { status: 201, msg: 'Book returned with no late' }
-                }
-            }
-            else {
-                return { status: 201, msg: 'Already returned book' }
-            }
+            return { status: 400, msg: 'Error while getting Book, try again' }
         }
     }
 
+    if (book == null || book.length == 0) {
+        return { status: 400, msg: 'Inexistent book' }
+    }
+
+    //CREATE VARIABLE TO CALL REPOSITORES
+    let withdrawal
+    try {
+        withdrawal = await WithdrawalsRepository.findAll({
+            where: {
+                student_reg: regId,
+                book_isbn: book.isbn
+            }
+        })
+    }
+    //IN CASE OF ERROR
+    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+    catch (err) {
+        if (err.name == 'SequelizeConnectionRefusedError') {
+            return { status: 400, msg: 'Connection with DB error' }
+        }
+        else {
+            return { status: 400, msg: 'Error while getting Withdrawal, try again' }
+        }
+    }
+
+
+    //CHECK IF STUDENT DONT HAVE ANY WITHDRAWS FOR THIS BOOK
+    if (withdrawal == null || withdrawal.length == 0) {
+        return { status: 400, msg: "Not a single withdrawal registered for this book" }
+    }
+
+    if (withdrawal.giveback_date == null) {
+        //CALCULATE DIFF BETWEEN RETURN_DATE AND GIVEBACK_DATE
+        let now = new Date().toISOString()
+        let diference = daysBetween(withdrawal.return_date, now)
+        console.log("==> ", parseInt(diference))
+        if (diference > 0) {
+            //CREATE VARIABLE TO CALL REPOSITORES
+            let updateWithdrawal
+            try {
+                updateWithdrawal = await WithdrawalsRepository.update(
+                    { giveback_date: now, late: parseInt(diference), done: 1 },
+                    { where: { book_isbn: book.isbn } }
+                )
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                }
+                else {
+                    return { status: 400, msg: 'Error while updating Withdrawal, try again' }
+                }
+            }
+
+            //CREATE VARIABLE TO CALL REPOSITORES
+            let updateStudent
+            try {
+                updateStudent = await StudentsRepository.update(
+                    { withdraw: student.withdraw - 1 },
+                    { where: { reg_id: student.reg_id } }
+                )
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                }
+                else {
+                    return { status: 400, msg: 'Error while updating Student, try again' }
+                }
+            }
+
+            //CREATE VARIABLE TO CALL REPOSITORES
+            let updateBook
+            try {
+                updateBook = await BooksRepository.update(
+                    { stock: book.stock + 1 },
+                    { where: { isbn: book.isbn } }
+                )
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                }
+                else {
+                    return { status: 400, msg: 'Error while updating Book, try again' }
+                }
+            }
+//NEED TO CHECK IF ONE OF THOSE IS NOT GOOD, WHAT TO DO?
+            if(updateWithdrawal && updateBook && updateStudent){
+                return { status: 201, msg: `Book returned with ${diference} late` }
+            }
+        }
+
+        else {
+            //CREATE VARIABLE TO CALL REPOSITORES
+            let updateWithdrawal
+            try {
+                updateWithdrawal = await WithdrawalsRepository.update(
+                    { giveback_date: now, late: 0, done: 1 },
+                    { where: { book_isbn: book.isbn } }
+                )
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                }
+                else {
+                    return { status: 400, msg: 'Error while updating Withdrawal, try again' }
+                }
+            }
+            //CREATE VARIABLE TO CALL REPOSITORES
+            let updateStudent
+            try {
+                updateStudent = await StudentsRepository.update(
+                    { withdraw: student.withdraw - 1 },
+                    { where: { reg_id: student.reg_id } }
+                )
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                }
+                else {
+                    return { status: 400, msg: 'Error while updating Student, try again' }
+                }
+            }
+            //CREATE VARIABLE TO CALL REPOSITORES
+            let updateBook
+            try {
+                updateBook = await BooksRepository.update(
+                    { stock: book.stock + 1 },
+                    { where: { isbn: book.isbn } }
+                )
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                }
+                else {
+                    return { status: 400, msg: 'Error while updating Book, try again' }
+                }
+            }
+
+            //NEED TO CHECK IF ONE OF THOSE IS NOT GOOD, WHAT TO DO?
+            if (updateWithdrawal && updateBook && updateStudent) {
+                return { status: 201, msg: "Giveback registered" }
+            }
+        }
+    }
+    //IN CASE STUDENT ALREADY RETURNED THIS BOOK
+    else {
+        return { status: 201, msg: 'Already returned book' }
+    }
 }
 
 

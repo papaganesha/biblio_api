@@ -5,87 +5,156 @@ const AuthorsRepository = require("../Models/Authors.js")
 
 BooksBusiness = {}
 
-//BooksBusiness.findAllStudents = async () => {}
 
+//CREATE BOOK: REQUIRED PARAMS(ISBN, NAME, AUTHOR, PUBLISHER, PUBLI_DATE, STOCK)
+//RETURN STATUS AND NEW CREATED BOOK ISBN
 BooksBusiness.createBookBusiness = async (isbn, name, author, publisher, publi_date, stock) => {
-    const create = await BooksRepository.create({
-        isbn,
-        name,
-        author,
-        publisher,
-        publi_date,
-        stock
-    }).catch(err => {
-        //RETURN 1 CASE ISBN ALREADY REGISTERES
-        //RETURN 2 ANY OTHER ERRO
-        if(err.name == 'SequelizeUniqueConstraintError'){
-            return {flag: 1, status: 400, msg: 'Book with this ISBN already exists'}
-        }else if(err.name == 'SequelizeConnectionRefusedError'){
-            return {flag: 2, status: 400, msg: 'Connection with DB error'}
+    //CHECK PARAMETERS
+    if (isbn && name && author && publisher && publisher && publi_date && stock) {
+        //CREATE VARIABLE TO CALL REPOSITORES
+        let create
+        try {
+            //CREATE A NEW AUTHOR WITH THE REQUIRED PARAMETERS
+            create = await BooksRepository.create({
+                isbn,
+                name,
+                author,
+                publisher,
+                publi_date,
+                stock
+            })
         }
-        
-    })
+        //IN CASE OF ERROR
+        //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+        catch (err) {
+            if (err.name == 'SequelizeUniqueConstraintError') {
+                return { status: 400, msg: 'Book with this ISBN already exists' }
+            } else if (err.name == 'SequelizeConnectionRefusedError') {
+                return { status: 400, msg: 'Connection with DB error' }
+            }
 
-    if(create.flag != null){
-        if(create.flag == 1){
-            return {status: create.status, msg: create.msg}
-        }else{
-            return {status: create.status, msg: create.msg}
         }
-    }else{
-        return {status: 201, msg: create.isbn}
+
+        //IF THE INSERTION HAS OCCURRED
+        return { status: 201, msg: { isbn: create.isbn } }
     }
+    //MISSING PARAMETERS
+    else {
+        return { status: 400, msg: 'Missing parameters, try again' }
+    }
+
 }
 
-// RETURNING ONLY AVAILABLE BOOKS, WHERE STOCK IS GREATHER THAN 0
+//GET ALL AVAILABLE BOOKS
+//RETURNING ONLY AVAILABLE BOOKS, WHERE STOCK IS GREATHER THAN 0
 BooksBusiness.getAllBooksBusiness = async () => {
-    const books = await BooksRepository.findAll({where:{
-        stock:{
-            [Op.gt]: 0
-          }
-    }}).catch(err => {
-        if(err.name == 'SequelizeConnectionRefusedError'){
-            return {status: 400, msg: 'Connection with DB error'}
-        }else{
-            return {status: 400, msg: err.message}
+    //CREATE VARIABLE TO CALL REPOSITORES
+    let books
+    try {
+        //GET ALL BOOKS WHERE STOCK IS GREATHER THAN 0
+        books = await BooksRepository.findAll({
+            where: {
+                stock: {
+                    [Op.gt]: 0
+                }
+            }
+        })
+    }
+    //IN CASE OF ERROR
+    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+    catch (err) {
+        if (err.name == 'SequelizeConnectionRefusedError') {
+            return { status: 400, msg: 'Connection with DB error' }
+        } else {
+            return { status: 400, msg: 'Error while getting books, try again' }
         }
-        
-    })
-    console.log(books.length)
+    }
+
+    //IF BOOKS ARE NULL OR INVALID
     if (books == null || books.length == 0) {
-        return {status: 200, msg: "Not a single book registered"}
+        return { status: 200, msg: "Not a single book registered" }
     }
-    else if(books.status == 400){
-        return {status: books.status, msg: books.msg}
-    }
+    //RETURNING BOOKS
     else {
-        return {status: 200, msg: books}
+        return { status: 200, msg: books }
     }
 }
 
 
+//GET BOOKS BY AUTHOR NAME
+//RETURN STATUS AND LIST OF BOOKS
 BooksBusiness.getBooksByAuthorBusiness = async (authorName) => {
-    const book = await BooksRepository.findAll({ where: { author: authorName } })
-    if (book == null || book.length == 0) {
-        return "Inexistent Books for this Author"
+    //CHECK PARAMETERS
+    if (authorName) {
+        //CREATE VARIABLE TO CALL REPOSITORES
+        let books
+        try {
+            //GET ALL BOOKS WHERE AUTHOR IS THE SAME AS THE PARAMETER RECEIVED
+            books = await BooksRepository.findAll({ where: { author: authorName } })
+        }
+        //IN CASE OF ERROR
+        //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+        catch (err) {
+            if (err.name == 'SequelizeConnectionRefusedError') {
+                return { status: 400, msg: 'Connection with DB error' }
+            } else {
+                return { status: 400, msg: 'Error while getting books, try again' }
+            }
+        }
+
+        //IF BOOKS ARE NULL OR INVALID
+        if (books == null || books.length == 0) {
+            return { status: 400, msg: 'Inexistent Books for this Author' }
+        }
+        //RETURNING BOOKS
+        else {
+            return { status: 200, msg: books }
+        }
     }
+    //MISSING PARAMETERS
     else {
-        return book
+        return { status: 400, msg: 'Missing parameters, try again' }
     }
 }
 
+//GET BOOKS BY BOOKNAME
+//RETURN STATUS AND LIST OF BOOKS
 BooksBusiness.getBooksByNameBusiness = async (bookName) => {
-    const book = await BooksRepository.findAll({
-        where: {
-            name:
-                { [Op.like]: `%${bookName}%` }
+    //CHECK PARAMETERS
+    if (bookName) {
+        //CREATE VARIABLE TO CALL REPOSITORES
+        let books
+        try {
+            //GET ALL BOOKS WHERE AUTHOR IS THE SAME AS THE PARAMETER RECEIVED
+            books = await BooksRepository.findAll({
+                where: {
+                    name:
+                        { [Op.like]: `%${bookName}%` }
+                }
+            })
         }
-    })
-    if (book == null || book.length == 0) {
-        return "Inexistent Books with this name"
+        //IN CASE OF ERROR
+        //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+        catch (err) {
+            if (err.name == 'SequelizeConnectionRefusedError') {
+                return { status: 400, msg: 'Connection with DB error' }
+            } else {
+                return { status: 400, msg: 'Error while getting books, try again' }
+            }
+        }
+
+        //IF BOOKS ARE NULL OR INVALID
+        if (books == null || books.length == 0) {
+            return { status: 400, msg: 'Inexistent Books with this name' }
+        }
+        //RETURNING BOOKS
+        else {
+            return { status: 200, msg: books }
+        }
     }
+    //MISSING PARAMETERS
     else {
-        return book
+        return { status: 400, msg: 'Missing parameters, try again' }
     }
 }
 
