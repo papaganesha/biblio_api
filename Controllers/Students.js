@@ -1,7 +1,8 @@
-//Listar e buscar todos os clientes E cliente especifico por ID.✔️
+// CREATE NEW STUDENT.✔️
+// SIGNIN STUDENT(JWT AUTHENTICATION WITH MIDDLEWARE). ✔️
+// GET STUDENT INFO WITH REQ.REG_ID(NEED TO BE AUTHENTICATED). ✔️
 
 
-// const {  } = require('../Bussiness/Books')
 const { 
     createStudentBusiness,
     getAllStudentsBusiness,
@@ -12,7 +13,9 @@ const {
 
 var Controller = {}
 
-//SIGIN
+//SIGNIN: REQUIRED PARAMS(REGID AND PASSWORD)
+//STUDENT NEED TO BE ALREADY REGISTERED
+//RETURN JWT IN CASE OF SIGNIN PROCEED
 Controller.signInController = async(req, res) => {
     const {reg_id, password} = req.body
     let result = await signInBusiness(reg_id, password)
@@ -24,7 +27,7 @@ Controller.signInController = async(req, res) => {
     
 }
 
-//GET ALL THE STUDENTS(BUSCA TODOS OS ESTUDANTES)
+//CREATE NEW STUDENT: REQUIRED PARAMS(NAME, PASSWORD AND PHONE)
 Controller.createStudentController = async (req, res) => {
     const {name, password, phone} = req.body
     let result = await createStudentBusiness(name, password, phone)
@@ -32,7 +35,7 @@ Controller.createStudentController = async (req, res) => {
 }
 
 
-//GET STUDENT BY REGISTRATION NUMBER(PEGA ESTUDANTE PELO NUMERO DE MATRICULA)
+//GET STUDENT BY REGISTRATION NUMBER
 Controller.getStudentByRegController = async (req, res) => {
     const {reg_id} = req
     let result = await getStudentByRegBusiness(reg_id)

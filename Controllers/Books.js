@@ -1,5 +1,6 @@
-//Listar e buscar todos os clientes E cliente especifico por ID.✔️
-
+// CREATE NEW BOOK.✔️
+// GET ALL BOOKS BY AVAILABILITY. ✔️
+// GET ALL BOOKS BY PARAMS(BOOKNAME OR AUTHOR) ✔️
 
 const { 
     getAllBooksBusiness,
@@ -17,14 +18,14 @@ Controller.createBookController = async (req, res) => {
     res.status(result.status).json(result.msg)
 }
 
-//GET ALL THE STUDENTS(BUSCA TODOS OS ESTUDANTES)
+//GET ALL THE AVAILABLE BOOKS
 Controller.getAllBooksController = async (req, res) => {
     let result = await getAllBooksBusiness()
     res.status(result.status).json(result.msg)
 }
 
 
-//GET ALL THE STUDENTS(BUSCA TODOS OS ESTUDANTES)
+//GET ALL THE AVAILABLE BOOKS BY PARAMS(BOOKNAME OR AUTHOR)
 Controller.getAllBooksByParamsController = async (req, res) => {
     const { author, name} = req.body
     let result

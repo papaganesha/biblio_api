@@ -1,6 +1,9 @@
+// CREATE NEW BOOK.✔️
+// GET ALL BOOKS BY AVAILABILITY. ✔️
+// GET ALL BOOKS BY PARAMS(BOOKNAME OR AUTHOR) ✔️
+
 const { Op } = require('sequelize')
 const BooksRepository = require("../Models/Books.js")
-const AuthorsRepository = require("../Models/Authors.js")
 
 
 BooksBusiness = {}
@@ -89,8 +92,15 @@ BooksBusiness.getBooksByAuthorBusiness = async (authorName) => {
         //CREATE VARIABLE TO CALL REPOSITORES
         let books
         try {
-            //GET ALL BOOKS WHERE AUTHOR IS THE SAME AS THE PARAMETER RECEIVED
-            books = await BooksRepository.findAll({ where: { author: authorName } })
+            //GET ALL BOOKS WHERE AUTHOR IS THE SAME AS THE PARAMETER RECEIVED AND STOCK IS GREATER THAN 0
+            books = await BooksRepository.findAll({
+                where: {
+                    author: authorName,
+                    stock: {
+                        [Op.gt]: 0
+                    }
+                }
+            })
         }
         //IN CASE OF ERROR
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
@@ -125,11 +135,15 @@ BooksBusiness.getBooksByNameBusiness = async (bookName) => {
         //CREATE VARIABLE TO CALL REPOSITORES
         let books
         try {
-            //GET ALL BOOKS WHERE AUTHOR IS THE SAME AS THE PARAMETER RECEIVED
+            //GET ALL BOOKS WHERE BOOKANME IS THE SAME AS THE PARAMETER RECEIVED AND STOCK IS GREATER THAN 0
             books = await BooksRepository.findAll({
                 where: {
-                    name:
-                        { [Op.like]: `%${bookName}%` }
+                    name: {
+                        [Op.like]: `%${bookName}%`
+                    },
+                    stock: {
+                        [Op.gt]: 0
+                    }
                 }
             })
         }

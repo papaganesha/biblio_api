@@ -1,3 +1,8 @@
+// CREATE NEW STUDENT.✔️
+// SIGNIN STUDENT(JWT AUTHENTICATION WITH MIDDLEWARE). ✔️
+// GET STUDENT INFO WITH REQ.REG_ID(NEED TO BE AUTHENTICATED). ✔️
+
+
 const StudentsRepository = require("../Models/Students.js")
 
 StudentsBusiness = {}
@@ -77,8 +82,8 @@ StudentsBusiness.createStudentBusiness = async (name, password, phone) => {
 }
 
 
-//GET USER INFO WITH REG_ID ON REQUISITION(AUTH)
-//RETURN USER INFO
+//GET STUDENT INFO WITH REG_ID ON REQUISITION(AUTH)
+//RETURN STUDENT INFO
 StudentsBusiness.getStudentByRegBusiness = async (reg_id) => {
     //CREATE VARIABLE TO CALL REPOSITORIES
     let student

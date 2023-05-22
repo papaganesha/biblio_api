@@ -1,3 +1,7 @@
+// CREATE NEW AUTHOR.✔️
+// GET ALL AUTHORS. ✔️
+
+
 const { Op } = require('sequelize')
 const AuthorsRepository = require("../Models/Authors.js")
 

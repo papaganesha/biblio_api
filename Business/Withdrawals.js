@@ -1,6 +1,6 @@
-// FUNCTIONS
-// CREATE NEW WITHDRAWAL, WITH BOOK NAME AND REG_ID. 
-// REMOVE WITHDRAWAL BY WITHDRAWAL_ID OR STUDENT REG_ID.
+// CREATE NEW WITHDRAW.✔️
+// GET ALL WITHDRAWS FOR AUTHENTICATED STUDENT. ✔️
+// GIVEBACK BOOK. ✔️
 
 const { Sequelize, Op } = require('sequelize')
 const WithdrawalsRepository = require("../Models/Withdrawals.js")
@@ -353,8 +353,8 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                     return { status: 400, msg: 'Error while updating Book, try again' }
                 }
             }
-//NEED TO CHECK IF ONE OF THOSE IS NOT GOOD, WHAT TO DO?
-            if(updateWithdrawal && updateBook && updateStudent){
+            //NEED TO CHECK IF ONE OF THOSE IS NOT GOOD, WHAT TO DO?
+            if (updateWithdrawal && updateBook && updateStudent) {
                 return { status: 201, msg: `Book returned with ${diference} late` }
             }
         }

@@ -1,5 +1,6 @@
-//Listar e buscar todos os clientes E cliente especifico por ID.✔️
-
+// CREATE NEW WITHDRAW.✔️
+// GET ALL WITHDRAWS FOR AUTHENTICATED STUDENT. ✔️
+// GIVEBACK BOOK. ✔️
 
 const {
     createWithdrawalBusiness,
@@ -9,7 +10,7 @@ const {
 
 var Controller = {}
 
-// CREATE NEW WITHDRAWAL (CRIAR NOVA RESERVA)
+// CREATE NEW WITHDRAWAL: REQUIRED PARAMS(NAME, REGID)
 Controller.createWithdrawalController = async (req, res) => {
     const { reg_id } = req
     const { name } = req.body
@@ -17,18 +18,18 @@ Controller.createWithdrawalController = async (req, res) => {
     res.status(result.status).json(result.msg)
 }
 
-//GET ALL THE WITHDRAWALS(RETORNA TODAS AS RESERVAS)
+//GET ALL THE WITHDRAWALS FOR AUTHENTICATED STUDENT
 Controller.getAllWithdrawalsController = async (req, res) => {
     const {reg_id} = req
     let result = await getAllWithdrawalsBusiness(reg_id)
     res.status(200).json(result)
 }
 
+// GIVEBACK BOOK: REQUIRED PARAMS(NAME, REGID)
 Controller.givebackController = async (req, res) => {
     const { reg_id } = req
     const { name } = req.body
     let result = await givebackBusiness(name, reg_id)
-    console.log(result)
     res.status(result.status).json(result.msg)
     
 }
