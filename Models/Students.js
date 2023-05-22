@@ -1,5 +1,5 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const useBcrypt = require('sequelize-bcrypt');
+const { Sequelize, DataTypes } = require('sequelize')
+const useBcrypt = require('sequelize-bcrypt')
 const jwt = require('jsonwebtoken')
 
 //IMPORTING SEQUELIZE CONNECTED AND AUTHENTICATED
@@ -47,7 +47,7 @@ const Student = sequelize.define('student', {
 }, {
     // Other model options go here
     tableName: 'students',
-});
+})
 
 Student.prototype.generateToken = async(id) =>{
     return jwt.sign({ id: id }, "secret", {
@@ -57,12 +57,12 @@ Student.prototype.generateToken = async(id) =>{
   
 
 sequelize.sync().then(() => {
-    console.log('Students table created successfully!');
+    console.log('Students table created successfully!')
 }).catch((error) => {
-    console.error('Unable to create table : ', error);
-});
+    console.error('Unable to create table : ', error)
+})
 
 
-useBcrypt(Student);
+useBcrypt(Student)
 
 module.exports = Student

@@ -18,10 +18,10 @@ const isAuth = (req, res, next) => {
     }
 
     //GETTING THE TOKEN FROM X-AUTHORIZATION
-    const token = authHeader.split(' ')[0];
+    const token = authHeader.split(' ')[0]
 
     //VARIABLE TO RECEIVE DECODED TOKEN
-    let decodedToken;
+    let decodedToken
     //TRY TO DECODE THE TOKEN
     try {
         decodedToken = jwt.verify(token, 'secret')
@@ -39,7 +39,7 @@ const isAuth = (req, res, next) => {
     else {
         req.reg_id = decodedToken.id
         next()
-    };
-};
+    }
+}
 
 module.exports = isAuth

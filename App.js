@@ -6,7 +6,7 @@ require('dotenv/config')
 
 class AppController {
     constructor() {
-        this.app = express();
+        this.app = express()
 
         this.middlewares()
         this.routes()

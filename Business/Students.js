@@ -15,7 +15,7 @@ StudentsBusiness.signInBusiness = async (reg_id, password) => {
         let student
         try {
             //GET STUDENT WHERE REGISTRATION_ID IS THE SAME AS THE PARAMETER RECEIVED
-            student = await StudentsRepository.findOne({ where: { reg_id: reg_id } });
+            student = await StudentsRepository.findOne({ where: { reg_id: reg_id } })
         }
         //IN CASE OF ERROR
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
@@ -30,7 +30,7 @@ StudentsBusiness.signInBusiness = async (reg_id, password) => {
 
         //CASE PASSWORD MATCHES
         if (student.authenticate(password)) {
-            const token = await student.generateToken(student.reg_id);
+            const token = await student.generateToken(student.reg_id)
             return { status: 202, token: token }
         }
         //CASE PASSWORD DONT MATCH

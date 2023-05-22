@@ -1,4 +1,4 @@
-const Router = require('express').Router();
+const Router = require('express').Router()
 const API_URL = process.env.API_URL
 
 //AUTH MIDDLEWARE
@@ -21,12 +21,12 @@ const {
     createWithdrawalController,
     getAllWithdrawalsController,
     givebackController
-} = require('../Controllers/Withdrawals');
+} = require('../Controllers/Withdrawals')
 
 const {
      createAuthorController, 
      getAllAuthorsController 
-} = require('../Controllers/Authors');
+} = require('../Controllers/Authors')
 
 
 //============= STUDENTS ===================================================================================================

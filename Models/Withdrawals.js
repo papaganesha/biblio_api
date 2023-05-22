@@ -1,5 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
-
+const { Sequelize, DataTypes } = require('sequelize')
 const sequelize = require("./Connect.js")
 
 
@@ -43,12 +42,8 @@ const Withdrawal = sequelize.define('withdrawal', {
 }, {
     // Other model options go here
     tableName: 'withdrawals'
-});
-
+})
 sequelize.sync().then(() => {
-    console.log('Withdrawals table created successfully!');
-}).catch((error) => {
-    console.error('Unable to create table : ', error);
-});
-
+    console.log('Withdrawals table created successfully!')}).catch((error) => {
+    console.error('Unable to create table : ', error)})
 module.exports = Withdrawal

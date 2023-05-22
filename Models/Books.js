@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = require("./Connect.js")
 
@@ -42,12 +42,12 @@ const Book = sequelize.define('book', {
 }, {
     // Other model options go here
     tableName: 'books',
-});
+})
 
 sequelize.sync().then(() => {
-    console.log('Books table created successfully!');
+    console.log('Books table created successfully!')
 }).catch((error) => {
-    console.error('Unable to create table : ', error);
-});
+    console.error('Unable to create table : ', error)
+})
 
 module.exports = Book
