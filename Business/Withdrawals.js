@@ -8,6 +8,8 @@ const StudentsRepository = require("../Models/Students.js")
 const BooksRepository = require("../Models/Books.js")
 const { addWeeksToDate, daysBetween } = require("../Services/Date.js")
 
+const sequelize  = require('../models/Connect.js')
+
 
 WithdrawalsBusiness = {}
 
@@ -25,7 +27,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         let book
         try {
             //GET ONE BOOK WHERE BOOK.NAME = BOOKNAME REQUIRED PARAMETER
-            book = await BooksRepository.findOne({ where: { name: bookName } })
+            book = await BooksRepository.findOne({ where: { name: bookName } }) 
         }
         //IN CASE OF ERROR
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
@@ -56,7 +58,8 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             withdrawal = await WithdrawalsRepository.findOne({
                 where: {
                     student_reg: regId,
-                    book_isbn: book.isbn
+                    book_isbn: book.isbn,
+                    giveback_date:{ [Op.eq]: null}
                 }
             })
         }
@@ -72,7 +75,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         }
 
         //IN CASE STUDENT ALREADY HAS WITHDRAW FOR THIS BOOK
-        if (withdrawal != null && withdrawal.giveback_date == null) {
+        if (withdrawal != null) {
             return { status: 400, msg: "Student cant withdraw the same book twice." }
         }
 
@@ -96,6 +99,8 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         if (student.withdraw > 0 && student.withdraw >= 3) {
             return { status: 400, msg: "Student cant withdraw no more" }
         } else {
+            const transaction = await sequelize.transaction() 
+
             //CREATE NEW WITHDRAWAL
             //CREATE VARIABLE TO CALL REPOSITORES
             let create
@@ -106,10 +111,12 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
                     start_date: new Date().toISOString(),
                     return_date: addWeeksToDate(new Date(), 1).toISOString()
                 })
+                await transaction.commit()
             }
             //IN CASE OF ERROR
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
+                await transaction2.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
                     return { status: 400, msg: 'Connection with DB error' }
                 }
@@ -122,6 +129,10 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             console.log(`=> ${new Date().toISOString()} => ${addWeeksToDate(new Date(), 1).toISOString()}`)
 
             console.log(`=> create => ${create.affectedRows}`)
+            
+            
+            const transaction2 = await sequelize.transaction() 
+
             //REMOVE STOCK FROM BOOK
             let newStock = book.stock - 1
             //CREATE VARIABLE TO CALL REPOSITORES
@@ -129,12 +140,14 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             try {
                 updateBook = await BooksRepository.update(
                     { stock: newStock },
-                    { where: { isbn: book.isbn } }
+                    { where: { isbn: book.isbn } }, { transaction2 }
                 )
+                await transaction2.commit()
             }
             //IN CASE OF ERROR
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
+                await transaction2.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
                     return { status: 400, msg: 'Connection with DB error' }
                 }
@@ -143,6 +156,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
                 }
             }
 
+            const transaction3 = await sequelize.transaction() 
 
             //ADD WITHDRAW TO STUDENT
             let newWithDraw = student.withdraw + 1
@@ -151,12 +165,14 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             try {
                 updateStudent = await StudentsRepository.update(
                     { withdraw: newWithDraw },
-                    { where: { reg_id: student.reg_id } }
+                    { where: { reg_id: student.reg_id } }, { transaction3 }
                 )
+                await transaction3.commit()
             }
             //IN CASE OF ERROR
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
+                await transaction3.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
                     return { status: 400, msg: 'Connection with DB error' }
                 }
@@ -238,6 +254,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
         }
     }
 
+    
 
     //CHECK IF BOOK EXISTS
     //CREATE VARIABLE TO CALL REPOSITORES
@@ -267,10 +284,11 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
     //CREATE VARIABLE TO CALL REPOSITORES
     let withdrawal
     try {
-        withdrawal = await WithdrawalsRepository.findAll({
+        withdrawal = await WithdrawalsRepository.findOne({
             where: {
                 student_reg: regId,
-                book_isbn: book.isbn
+                book_isbn: book.isbn,
+                giveback_date:{ [Op.eq]: null}
             }
         })
     }
@@ -297,6 +315,8 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
         let diference = daysBetween(withdrawal.return_date, now)
         console.log("==> ", parseInt(diference))
         if (diference > 0) {
+            const transaction = await sequelize.transaction() 
+
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateWithdrawal
             try {
@@ -304,10 +324,12 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                     { giveback_date: now, late: parseInt(diference), done: 1 },
                     { where: { book_isbn: book.isbn } }
                 )
+                transaction.commit()
             }
             //IN CASE OF ERROR
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
+                transaction.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
                     return { status: 400, msg: 'Connection with DB error' }
                 }
@@ -316,6 +338,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                 }
             }
 
+            const transaction2 = await sequelize.transaction() 
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateStudent
             try {
@@ -323,10 +346,12 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                     { withdraw: student.withdraw - 1 },
                     { where: { reg_id: student.reg_id } }
                 )
+                transaction2.commit()
             }
             //IN CASE OF ERROR
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
+                transaction2.commit()
                 if (err.name == 'SequelizeConnectionRefusedError') {
                     return { status: 400, msg: 'Connection with DB error' }
                 }
@@ -335,6 +360,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                 }
             }
 
+            const transaction3 = await sequelize.transaction() 
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateBook
             try {
@@ -342,10 +368,12 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                     { stock: book.stock + 1 },
                     { where: { isbn: book.isbn } }
                 )
+                transaction3.commit()
             }
             //IN CASE OF ERROR
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
+                transaction2.commit()
                 if (err.name == 'SequelizeConnectionRefusedError') {
                     return { status: 400, msg: 'Connection with DB error' }
                 }
@@ -360,6 +388,8 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
         }
 
         else {
+            const transaction = await sequelize.transaction() 
+
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateWithdrawal
             try {
@@ -367,10 +397,12 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                     { giveback_date: now, late: 0, done: 1 },
                     { where: { book_isbn: book.isbn } }
                 )
+                transaction.commit()
             }
             //IN CASE OF ERROR
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
+                transaction.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
                     return { status: 400, msg: 'Connection with DB error' }
                 }
@@ -378,6 +410,8 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                     return { status: 400, msg: 'Error while updating Withdrawal, try again' }
                 }
             }
+
+            const transaction2 = await sequelize.transaction() 
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateStudent
             try {
@@ -385,10 +419,12 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                     { withdraw: student.withdraw - 1 },
                     { where: { reg_id: student.reg_id } }
                 )
+                transaction2.commit()
             }
             //IN CASE OF ERROR
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
+                transaction2.commit()
                 if (err.name == 'SequelizeConnectionRefusedError') {
                     return { status: 400, msg: 'Connection with DB error' }
                 }
@@ -396,6 +432,8 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                     return { status: 400, msg: 'Error while updating Student, try again' }
                 }
             }
+
+            const transaction3 = await sequelize.transaction() 
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateBook
             try {
@@ -403,10 +441,12 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                     { stock: book.stock + 1 },
                     { where: { isbn: book.isbn } }
                 )
+                transaction3.commit()
             }
             //IN CASE OF ERROR
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
+                transaction3.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
                     return { status: 400, msg: 'Connection with DB error' }
                 }

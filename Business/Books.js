@@ -4,6 +4,7 @@
 
 const { Op } = require('sequelize')
 const BooksRepository = require("../Models/Books.js")
+const sequelize  = require('../models/Connect.js')
 
 
 BooksBusiness = {}
@@ -14,6 +15,8 @@ BooksBusiness = {}
 BooksBusiness.createBookBusiness = async (isbn, name, author, publisher, publi_date, stock) => {
     //CHECK PARAMETERS
     if (isbn && name && author && publisher && publisher && publi_date && stock) {
+        const transaction = await sequelize.transaction() 
+
         //CREATE VARIABLE TO CALL REPOSITORES
         let create
         try {
@@ -25,11 +28,13 @@ BooksBusiness.createBookBusiness = async (isbn, name, author, publisher, publi_d
                 publisher,
                 publi_date,
                 stock
-            })
+            }, { transaction })
+            await transaction.commit()
         }
         //IN CASE OF ERROR
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
         catch (err) {
+            await transaction.rollback()
             if (err.name == 'SequelizeUniqueConstraintError') {
                 return { status: 400, msg: 'Book with this ISBN already exists' }
             } else if (err.name == 'SequelizeConnectionRefusedError') {
@@ -37,7 +42,7 @@ BooksBusiness.createBookBusiness = async (isbn, name, author, publisher, publi_d
             }
 
         }
-
+        //console.log("1 - ",transaction)
         //IF THE INSERTION HAS OCCURRED
         return { status: 201, msg: { isbn: create.isbn } }
     }

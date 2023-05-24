@@ -6,7 +6,7 @@ const { Sequelize } = require('sequelize')
 // const dbPassword = process.env.DB_PASSWORD
 
 // Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize('biblioteca_api', 'root', '', {
+const sequelize = new Sequelize('biblio_api', 'root', '', {
     host: 'localhost',
     dialect: 'mysql'
 })
@@ -14,8 +14,9 @@ const sequelize = new Sequelize('biblioteca_api', 'root', '', {
 sequelize.authenticate().then(() => {
     console.log('Connection has been established successfully.')
  }).catch((error) => {
-    console.error('Unable to connect to the database: ', error)
+    console.error('Unable to connect to the database: try, again')
  })
+
 
 
 //exportar
