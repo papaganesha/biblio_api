@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "BiblioAPI",
-    "dateExported": "2023-05-21T20:25:44.502Z",
+    "dateExported": "2023-05-24T20:58:34.101Z",
     "version": "1.1",
     "folders": [],
     "requests": [
@@ -157,12 +157,12 @@
             "method": "POST",
             "sortNum": 30000,
             "created": "2023-05-11T14:41:22.877Z",
-            "modified": "2023-05-21T19:43:38.774Z",
+            "modified": "2023-05-24T15:27:08.877Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"comment_1\": \"name, password and phone as required parameters\",\n  \"name\":\"Joao Pedro\",\n  \"password\": \"12345678\",\n  \"phone\": \"51998196334\"\n}",
+                "raw": "{\n  \"comment_1\": \"name, password and phone as required parameters\",\n  \"name\":\"Pedro Pereira\",\n  \"password\": \"12345678\",\n  \"phone\": \"51998196434\"\n}",
                 "form": []
             },
             "tests": []
