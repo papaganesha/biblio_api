@@ -4,7 +4,7 @@
 
 
 const StudentsRepository = require("../Models/Students.js")
-const sequelize  = require('../models/Connect.js')
+const sequelize  = require('../Models/Connect.js')
 
 
 StudentsBusiness = {}
