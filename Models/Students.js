@@ -49,12 +49,12 @@ const Student = sequelize.define('student', {
     tableName: 'students',
 })
 
-Student.prototype.generateToken = async(id) =>{
+Student.prototype.generateToken = async (id) => {
     return jwt.sign({ id: id }, "mestredosmagos", {
-      expiresIn: '1h'
+        expiresIn: '1h'
     })
-  }
-  
+}
+
 
 sequelize.sync().then(() => {
     console.log('Students table created successfully!')

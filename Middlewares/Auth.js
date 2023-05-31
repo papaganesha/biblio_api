@@ -24,7 +24,7 @@ const isAuth = (req, res, next) => {
     let decodedToken
     //TRY TO DECODE THE TOKEN
     try {
-        decodedToken = jwt.verify(token, 'secret')
+        decodedToken = jwt.verify(token, 'mestredosmagos')
     }
     //ERROR WHILE DECODING/CANT BE DECODED
     catch (err) {
