@@ -69,3 +69,8 @@ por um determinado nome, etc ✅
 | Retirada de Livros | POST | /api/v1/withdraw | Registra a retirada de livros de um cliente. Um cliente pode retirar no máximo três livros e o livro deve estardisponível na biblioteca. Anota-se o nome do livro como parâmetro. |
 | Retorno de Livros | POST | /api/v1/giveback | Registra a devolução de livros de um cliente. Anota-se nome do livro como parâmetro. |
 
+
+*Testes dos Endpoints*
+-
+Realizado atráves da extensão *Thunder Client* do Visual Studio Code.
+Arquivo *thunder_collection.json* é a coleção dos endpoints e deve ser importado na ferramenta.
