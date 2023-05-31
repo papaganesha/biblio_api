@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `authors` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`author_id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Extraindo dados da tabela `authors`
@@ -761,7 +761,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`isbn`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 --
 -- Extraindo dados da tabela `books`
@@ -1833,7 +1833,7 @@ CREATE TABLE IF NOT EXISTS `students` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`reg_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 --
 -- Extraindo dados da tabela `students`
@@ -1862,7 +1862,7 @@ CREATE TABLE IF NOT EXISTS `withdrawals` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`withdrawal_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ;
 
 --
 -- Extraindo dados da tabela `withdrawals`

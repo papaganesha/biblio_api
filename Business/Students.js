@@ -4,6 +4,8 @@
 
 
 const StudentsRepository = require("../Models/Students.js")
+const sequelize  = require('../models/Connect.js')
+
 
 StudentsBusiness = {}
 
@@ -50,6 +52,8 @@ StudentsBusiness.signInBusiness = async (reg_id, password) => {
 StudentsBusiness.createStudentBusiness = async (name, password, phone) => {
     //CHECK PARAMETERS
     if (name && password && phone) {
+        const transaction = await sequelize.transaction() 
+
         //CREATE VARIABLE TO CALL REPOSITORIES
         let create
         try {
@@ -58,11 +62,13 @@ StudentsBusiness.createStudentBusiness = async (name, password, phone) => {
                 name,
                 password,
                 phone
-            })
+            }, { transaction })
+            await transaction.commit()
         }
         //IN CASE OF ERROR
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
         catch (err) {
+            await transaction.rollback()
             if (err.name == 'SequelizeUniqueConstraintError') {
                 return { status: 400, msg: 'Student with this phone already exists' }
             }
@@ -74,6 +80,7 @@ StudentsBusiness.createStudentBusiness = async (name, password, phone) => {
             }
         }
 
+        //console.log(transaction)
         //IF THE INSERTION HAS OCCURRED
         return { status: 201, msg: { id: create.reg_id } }
 

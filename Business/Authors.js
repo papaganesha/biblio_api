@@ -4,12 +4,13 @@
 
 const { Op } = require('sequelize')
 const AuthorsRepository = require("../Models/Authors.js")
-
+const sequelize  = require('../models/Connect.js')
 
 AuthorsBusiness = {}
 
 //CREATE AUTHOR: REQUIRED PARAMS(NAME, COUNTRY) 
 AuthorsBusiness.createAuthorBusiness = async (name, country) => {
+    const transaction = await sequelize.transaction() 
     //CREATE VARIABLE TO CALL REPOSITORES
     let create
     try {
@@ -17,11 +18,14 @@ AuthorsBusiness.createAuthorBusiness = async (name, country) => {
         create = await AuthorsRepository.create({
             name,
             country,
-        })
+        }, { transaction })
+        await transaction.commit()
     }
     //IN CASE OF ERROR
     //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
     catch (err) {
+        console.log("2 -- ", transaction)
+        await transaction.rollback()
         if (err.name == 'SequelizeUniqueConstraintError') {
             return { status: 400, msg: 'Author already exists' }
         } else if (err.name == 'SequelizeConnectionRefusedError') {
@@ -31,7 +35,7 @@ AuthorsBusiness.createAuthorBusiness = async (name, country) => {
             return { status: 400, msg: 'Error while creating Author, try again' }
         }
     }
-
+    console.log("1 -- ", transaction)
     //IF THE INSERTION HAS OCCURRED
     return { status: 201, msg: {name: create.name} }
 }
