@@ -74,3 +74,12 @@ por um determinado nome, etc ✅
 -
 Realizado atráves da extensão **Thunder Client** do Visual Studio Code.
 Arquivo **thunder_collection.json** é a coleção dos endpoints e deve ser importado na ferramenta.
+
+*Tecnologias usadas*
+-
+
+- Node.js com Express para construção da API.
+- Mysql como SGBD para persistencia.
+- Sequelize como ORM.
+- JWT para autenticação.
+- Python para inserção dos livros no banco de dados.
