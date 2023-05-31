@@ -214,7 +214,7 @@ WithdrawalsBusiness.getAllWithdrawalsBusiness = async (reg_id) => {
         return { status: 400, msg: "Not a single withdrawal registered" }
     }
     else {
-        return { status: 400, msg: withdrawals }
+        return { status: 200, msg: withdrawals }
     }
 }
 
