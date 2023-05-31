@@ -22,7 +22,7 @@ Controller.createWithdrawalController = async (req, res) => {
 Controller.getAllWithdrawalsController = async (req, res) => {
     const {reg_id} = req
     let result = await getAllWithdrawalsBusiness(reg_id)
-    res.status(200).json(result)
+    res.status(result.status).json(result.msg)
 }
 
 // GIVEBACK BOOK: REQUIRED PARAMS(NAME, REGID)
