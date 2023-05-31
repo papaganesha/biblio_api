@@ -73,4 +73,4 @@ por um determinado nome, etc ✅
 *Testes dos Endpoints*
 -
 Realizado atráves da extensão **Thunder Client** do Visual Studio Code.
-Arquivo *thunder_collection.json* é a coleção dos endpoints e deve ser importado na ferramenta.
+Arquivo **thunder_collection.json** é a coleção dos endpoints e deve ser importado na ferramenta.
