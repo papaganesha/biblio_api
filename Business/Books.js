@@ -64,8 +64,12 @@ BooksBusiness.getAllBooksBusiness = async () => {
             where: {
                 stock: {
                     [Op.gt]: 0
-                }
-            }
+                },
+                
+            },
+            order: [
+                ['name', 'ASC'],
+            ],
         })
     }
     //IN CASE OF ERROR

@@ -14,7 +14,8 @@ const {
 const {
     createStudentController,
     getStudentByRegController,
-    signInController
+    signInController,
+    deleteStudentByRegIdController
 } = require('../Controllers/Students')
 
 const {
@@ -38,6 +39,9 @@ Router.post(`${API_URL}/signin`, signInController)
 
 //RETURN STUDENT INFO BY REGISTRATION NUMBER/REG_ID
 Router.get(`${API_URL}/students`, isAuth, getStudentByRegController)
+
+//REMOVE STUDENT BY REGISTRATION NUMBER
+Router.delete(`${API_URL}/students`, isAuth, deleteStudentByRegIdController)
 //============= STUDENTS ===================================================================================================
 
 

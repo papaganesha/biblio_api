@@ -7,7 +7,8 @@ const {
     createStudentBusiness,
     getAllStudentsBusiness,
     getStudentByRegBusiness,
-    signInBusiness
+    signInBusiness,
+    deleteStudentBusiness
 } = require('../Business/Students')
 
 
@@ -41,5 +42,14 @@ Controller.getStudentByRegController = async (req, res) => {
     let result = await getStudentByRegBusiness(reg_id)
     res.status(result.status).json(result.msg)
 }
+
+//GET STUDENT BY REGISTRATION NUMBER
+Controller.deleteStudentByRegIdController = async (req, res) => {
+    const {reg_id} = req
+    let result = await deleteStudentBusiness(reg_id)
+    res.status(result.status).json(result.msg)
+}
+
+
 
 module.exports = Controller

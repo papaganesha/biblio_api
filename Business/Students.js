@@ -4,7 +4,7 @@
 
 
 const StudentsRepository = require("../Models/Students.js")
-const sequelize  = require('../Models/Connect.js')
+const sequelize = require('../Models/Connect.js')
 
 
 StudentsBusiness = {}
@@ -30,21 +30,27 @@ StudentsBusiness.signInBusiness = async (reg_id, password) => {
             }
         }
 
-        //CASE PASSWORD MATCHES
-        if (student.authenticate(password)) {
-            const token = await student.generateToken(student.reg_id)
-            return { status: 202, token: token }
-        }
-        //CASE PASSWORD DONT MATCH
-        else {
-            return { status: 401, msg: 'Wrong password' }
+        if (student != null) {
+            //CASE PASSWORD MATCHES
+            if (student.authenticate(password)) {
+                const token = await student.generateToken(student.reg_id)
+                return { status: 202, token: token }
+            }
+            //CASE PASSWORD DONT MATCH
+            else {
+                return { status: 401, msg: 'Wrong password' }
+            }
+        } else {
+            return { status: 400, msg: 'Student doesnt exists, try again' }
         }
     }
     //MISSING PARAMETERS
     else {
         return { status: 400, msg: 'Missing parameters, try again' }
     }
-}
+} 
+
+
 
 
 //CREATE STUDENT: REQUIRED PARAMS(NAME, PASSWORD, PHONE)
@@ -52,7 +58,7 @@ StudentsBusiness.signInBusiness = async (reg_id, password) => {
 StudentsBusiness.createStudentBusiness = async (name, password, phone) => {
     //CHECK PARAMETERS
     if (name && password && phone) {
-        const transaction = await sequelize.transaction() 
+        const transaction = await sequelize.transaction()
 
         //CREATE VARIABLE TO CALL REPOSITORIES
         let create
@@ -117,6 +123,68 @@ StudentsBusiness.getStudentByRegBusiness = async (reg_id) => {
     else {
         return { status: 200, msg: student }
     }
+}
+
+
+//CREATE STUDENT: REQUIRED PARAMS(NAME, PASSWORD, PHONE)
+//RETURN NEW STUDENT REG_ID
+StudentsBusiness.deleteStudentBusiness = async (regId) => {
+    //CHECK PARAMETERS
+    let student
+    try {
+        //student NEW STUDENT WITH REQUIRED RECEIVED PARAMETERS
+        create = await StudentsRepository.findOne({
+            where: {
+                reg_id: regId
+            }
+        })
+
+    }
+    //IN CASE OF ERROR
+    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+    catch (err) {
+        if (err.name == 'SequelizeConnectionRefusedError') {
+            return { status: 400, msg: 'Connection with DB error' }
+        }
+        else {
+            return { status: 400, msg: 'Error while deleting Student, try again' }
+        }
+    }
+
+    if(student != null && student.length > 0){
+        const transaction = await sequelize.transaction()
+
+    //CREATE VARIABLE TO CALL REPOSITORIES
+    let create
+    try {
+        //CREATE NEW STUDENT WITH REQUIRED RECEIVED PARAMETERS
+        create = await StudentsRepository.destroy({
+            where: {
+                reg_id: regId
+            }
+        }, { transaction })
+        await transaction.commit()
+    }
+    //IN CASE OF ERROR
+    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+    catch (err) {
+        await transaction.rollback()
+        if (err.name == 'SequelizeConnectionRefusedError') {
+            return { status: 400, msg: 'Connection with DB error' }
+        }
+        else {
+            return { status: 400, msg: 'Error while deleting Student, try again' }
+        }
+    }
+
+    //console.log(transaction)
+    //IF THE INSERTION HAS OCCURRED
+    return { status: 201, msg: `${create.reg_id} is removed with sucess` }
+
+    }else{
+        return { status: 400, msg: `Student doenst exists, try again` }
+    }
+
 }
 
 module.exports = StudentsBusiness
