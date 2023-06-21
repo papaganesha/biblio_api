@@ -48,7 +48,7 @@ StudentsBusiness.signInBusiness = async (reg_id, password) => {
     else {
         return { status: 400, msg: 'Missing parameters, try again' }
     }
-} 
+}
 
 
 
@@ -125,15 +125,134 @@ StudentsBusiness.getStudentByRegBusiness = async (reg_id) => {
     }
 }
 
-
 //CREATE STUDENT: REQUIRED PARAMS(NAME, PASSWORD, PHONE)
 //RETURN NEW STUDENT REG_ID
+StudentsBusiness.updateStudentBusiness = async (regId, name, phone) => {
+    //CHECK PARAMETER
+    if (name || phone) {
+        let getStudent
+        try {
+            //GET STUDENT
+            getStudent = await StudentsRepository.findOne({
+                where: {
+                    reg_id: regId
+                }
+            })
+
+        }
+        //IN CASE OF ERROR
+        //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+        catch (err) {
+            if (err.name == 'SequelizeConnectionRefusedError') {
+                return { status: 400, msg: 'Connection with DB error' }
+            }
+            else {
+                return { status: 400, msg: 'Error while deleting Student, try again' }
+            }
+        }
+
+        if (getStudent != null) {
+            const transaction = await sequelize.transaction()
+            if (name && phone) {
+                let updateNameAndPhone
+                try {
+                    updateNameAndPhone = await StudentsRepository.update(
+                        {
+                            name: name,
+                            phone: phone
+                        },
+                        { where: { reg_id: regId } },
+                        { transaction }
+                    )
+                    await transaction.commit()
+                }
+                //IN CASE OF ERROR
+                //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                catch (err) {
+                    await transaction.rollback()
+                    if (err.name == 'SequelizeUniqueConstraintError') {
+                        return { status: 400, msg: 'Student with this phone already exists' }
+                    }
+                    else if (err.name == 'SequelizeConnectionRefusedError') {
+                        return { status: 400, msg: 'Connection with DB error' }
+                    }
+                    else {
+                        return { status: 400, msg: 'Error while updating Student, try again' }
+                    }
+                }
+                return {status: 201, msg: `${getStudent.name} name and phone updated`}
+
+            }
+            if (name) {
+                let updateName
+                try {
+                    updateName = await StudentsRepository.update(
+                        { name: name },
+                        { where: { reg_id: regId } },
+                        { transaction }
+                    )
+                    await transaction.commit()
+                }
+                //IN CASE OF ERROR
+                //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                catch (err) {
+                    await transaction.rollback()
+                    if (err.name == 'SequelizeConnectionRefusedError') {
+                        return { status: 400, msg: 'Connection with DB error' }
+                    }
+                    else {
+                        return { status: 400, msg: 'Error while updating Student, try again' }
+                    }
+                }
+                return {status: 201, msg: `${getStudent.name} name updated`}
+
+            }
+            if (phone) {
+                let updatePhone
+                try {
+                    updatePhone = await StudentsRepository.update(
+                        { phone: phone },
+                        { where: { reg_id: regId } },
+                        { transaction }
+                    )
+                    await transaction.commit()
+                }
+                //IN CASE OF ERROR
+                //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                catch (err) {
+                    await transaction.rollback()
+                    if (err.name == 'SequelizeUniqueConstraintError') {
+                        return { status: 400, msg: 'Student with this phone already exists' }
+                    }
+                    else if (err.name == 'SequelizeConnectionRefusedError') {
+                        return { status: 400, msg: 'Connection with DB error' }
+                    }
+                    else {
+                        return { status: 400, msg: 'Error while updating Student, try again' }
+                    }
+                }
+                return {status: 201, msg: `${getStudent.name} phone updated`}
+            }
+            
+        }
+        //MISSING PARAMETERS
+        else {
+            return { status: 400, msg: 'Missing parameters, try again' }
+        }
+    } else {
+        return { status: 400, msg: `Student doenst exists, try again` }
+    }
+
+}
+
+//DELETE STUDENT: REQUIRED PARAMS(REGID, NEED TO BE AUTHENTICATED)
+//RETURN MESSAGES
 StudentsBusiness.deleteStudentBusiness = async (regId) => {
     //CHECK PARAMETERS
-    let student
+    let getStudent
     try {
         //student NEW STUDENT WITH REQUIRED RECEIVED PARAMETERS
-        create = await StudentsRepository.findOne({
+        getStudent = await StudentsRepository.findOne({
             where: {
                 reg_id: regId
             }
@@ -151,37 +270,37 @@ StudentsBusiness.deleteStudentBusiness = async (regId) => {
         }
     }
 
-    if(student != null && student.length > 0){
+    if (getStudent != null) {
         const transaction = await sequelize.transaction()
 
-    //CREATE VARIABLE TO CALL REPOSITORIES
-    let create
-    try {
-        //CREATE NEW STUDENT WITH REQUIRED RECEIVED PARAMETERS
-        create = await StudentsRepository.destroy({
-            where: {
-                reg_id: regId
+        //CREATE VARIABLE TO CALL REPOSITORIES
+        let deleteStudent
+        try {
+            //CREATE NEW STUDENT WITH REQUIRED RECEIVED PARAMETERS
+            deleteStudent = await StudentsRepository.destroy({
+                where: {
+                    reg_id: regId
+                }
+            }, { transaction })
+            await transaction.commit()
+        }
+        //IN CASE OF ERROR
+        //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+        catch (err) {
+            await transaction.rollback()
+            if (err.name == 'SequelizeConnectionRefusedError') {
+                return { status: 400, msg: 'Connection with DB error' }
             }
-        }, { transaction })
-        await transaction.commit()
-    }
-    //IN CASE OF ERROR
-    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
-    catch (err) {
-        await transaction.rollback()
-        if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            else {
+                return { status: 400, msg: 'Error while deleting Student, try again' }
+            }
         }
-        else {
-            return { status: 400, msg: 'Error while deleting Student, try again' }
-        }
-    }
 
-    //console.log(transaction)
-    //IF THE INSERTION HAS OCCURRED
-    return { status: 201, msg: `${create.reg_id} is removed with sucess` }
+        //console.log(transaction)
+        //IF THE INSERTION HAS OCCURRED
+        return { status: 201, msg: `${getStudent.name} is removed with sucess` }
 
-    }else{
+    } else {
         return { status: 400, msg: `Student doenst exists, try again` }
     }
 

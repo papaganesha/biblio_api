@@ -8,6 +8,7 @@ const {
     getAllStudentsBusiness,
     getStudentByRegBusiness,
     signInBusiness,
+    updateStudentBusiness,
     deleteStudentBusiness
 } = require('../Business/Students')
 
@@ -18,8 +19,8 @@ var Controller = {}
 //STUDENT NEED TO BE ALREADY REGISTERED
 //RETURN JWT IN CASE OF SIGNIN PROCEED
 Controller.signInController = async(req, res) => {
-    const {reg_id, password} = req.body
-    let result = await signInBusiness(reg_id, password)
+    const {regId, password} = req.body
+    let result = await signInBusiness(regId, password)
     if(result.status == 202){
         res.status(result.status).json(result.token)
     }else{
@@ -38,15 +39,22 @@ Controller.createStudentController = async (req, res) => {
 
 //GET STUDENT BY REGISTRATION NUMBER
 Controller.getStudentByRegController = async (req, res) => {
-    const {reg_id} = req
-    let result = await getStudentByRegBusiness(reg_id)
+    const {regId} = req
+    let result = await getStudentByRegBusiness(regId)
     res.status(result.status).json(result.msg)
 }
 
-//GET STUDENT BY REGISTRATION NUMBER
+//UPDATE STUDENT BY REGID AND SELECTED INFO
+Controller.updateStudentByRegIdController = async (req, res) => {
+    const {regId} = req
+    const {name, phone} = req.body
+    let result = await updateStudentBusiness(regId, name, phone)
+    res.status(result.status).json(result.msg)
+}
+//DELETE STUDENT BY REGISTRATION NUMBER
 Controller.deleteStudentByRegIdController = async (req, res) => {
-    const {reg_id} = req
-    let result = await deleteStudentBusiness(reg_id)
+    const {regId} = req
+    let result = await deleteStudentBusiness(regId)
     res.status(result.status).json(result.msg)
 }
 

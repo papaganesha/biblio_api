@@ -4,7 +4,7 @@
 
 const { Op } = require('sequelize')
 const BooksRepository = require("../Models/Books.js")
-const sequelize  = require('../models/Connect.js')
+const sequelize = require('../models/Connect.js')
 
 
 BooksBusiness = {}
@@ -15,7 +15,7 @@ BooksBusiness = {}
 BooksBusiness.createBookBusiness = async (isbn, name, author, publisher, publi_date, stock) => {
     //CHECK PARAMETERS
     if (isbn && name && author && publisher && publisher && publi_date && stock) {
-        const transaction = await sequelize.transaction() 
+        const transaction = await sequelize.transaction()
 
         //CREATE VARIABLE TO CALL REPOSITORES
         let create
@@ -65,7 +65,7 @@ BooksBusiness.getAllBooksBusiness = async () => {
                 stock: {
                     [Op.gt]: 0
                 },
-                
+
             },
             order: [
                 ['name', 'ASC'],
@@ -174,6 +174,116 @@ BooksBusiness.getBooksByNameBusiness = async (bookName) => {
         else {
             return { status: 200, msg: books }
         }
+    }
+    //MISSING PARAMETERS
+    else {
+        return { status: 400, msg: 'Missing parameters, try again' }
+    }
+}
+
+
+//DELETE BOOK BY IBSN OR BOOKNAME
+BooksBusiness.deleteBookBusiness = async (isbn, bookName) => {
+    //CHECK PARAMS
+    if (isbn || bookName) {
+        let getBook
+        if (isbn) {
+            try {
+                getBook = await BooksRepository.findOne({
+                    where: {
+                        isbn: isbn
+                    }
+                })
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                } else {
+                    return { status: 400, msg: 'Error while getting books, try again' }
+                }
+            }
+
+            console.log(getBook)
+            if (getBook != null) {
+                const transaction = await sequelize.transaction()
+                let removeBook
+                try {
+                    removeBook = await BooksRepository.destroy({
+                        where: {
+                            isbn: isbn
+                        },
+
+                    },
+                        { transaction })
+                }
+                //IN CASE OF ERROR
+                //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                catch (err) {
+                    await transaction.rollback()
+
+                    if (err.name == 'SequelizeConnectionRefusedError') {
+                        return { status: 400, msg: 'Connection with DB error' }
+                    } else {
+                        return { status: 400, msg: 'Error while getting books, try again' }
+                    }
+                }
+                return { status: 201, msg: `${getBook.name} removed with success` }
+            } else {
+                return { status: 400, msg: 'Inexistent Book' }
+            }
+
+        }
+        if (bookName) {
+            try {
+                //GET ALL BOOKS WHERE BOOKANME IS THE SAME AS THE PARAMETER RECEIVED AND STOCK IS GREATER THAN 0
+                getBook = await BooksRepository.findOne({
+                    where: {
+                        name: bookName
+                    }
+                })
+            }
+            //IN CASE OF ERROR
+            //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+            catch (err) {
+                if (err.name == 'SequelizeConnectionRefusedError') {
+                    return { status: 400, msg: 'Connection with DB error' }
+                } else {
+                    return { status: 400, msg: 'Error while getting books, try again' }
+                }
+            }
+            console.log(getBook)
+            if (getBook != null) {
+                const transaction = await sequelize.transaction()
+                let removeBook
+                try {
+                    removeBook = await BooksRepository.destroy({
+                        where: {
+                            name: {
+                                [Op.like]: `%${bookName}%`
+                            }
+                        }
+                    }, { transaction })
+                    await transaction.commit()
+                }
+                //IN CASE OF ERROR
+                //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                catch (err) {
+                    await transaction.rollback()
+                    if (err.name == 'SequelizeConnectionRefusedError') {
+                        return { status: 400, msg: 'Connection with DB error' }
+                    } else {
+                        return { status: 400, msg: 'Error while getting books, try again' }
+                    }
+                }
+                return { status: 201, msg: `${bookName} removed with success` }
+            } else {
+                return { status: 400, msg: 'Inexistent Book' }
+            }
+
+        }
+
     }
     //MISSING PARAMETERS
     else {

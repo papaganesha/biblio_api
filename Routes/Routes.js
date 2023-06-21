@@ -7,7 +7,8 @@ const isAuth = require('../Middlewares/Auth')
 const {
     createBookController,
     getAllBooksController,
-    getAllBooksByParamsController
+    getAllBooksByParamsController,
+    deleteBookController
 } = require('../Controllers/Books')
 
 
@@ -15,6 +16,7 @@ const {
     createStudentController,
     getStudentByRegController,
     signInController,
+    updateStudentByRegIdController,
     deleteStudentByRegIdController
 } = require('../Controllers/Students')
 
@@ -28,6 +30,7 @@ const {
      createAuthorController, 
      getAllAuthorsController 
 } = require('../Controllers/Authors')
+const { deleteBookBusiness } = require('../Business/Books')
 
 
 //============= STUDENTS ===================================================================================================
@@ -39,6 +42,9 @@ Router.post(`${API_URL}/signin`, signInController)
 
 //RETURN STUDENT INFO BY REGISTRATION NUMBER/REG_ID
 Router.get(`${API_URL}/students`, isAuth, getStudentByRegController)
+
+//REMOVE STUDENT BY REGISTRATION NUMBER
+Router.put(`${API_URL}/students`, isAuth, updateStudentByRegIdController)
 
 //REMOVE STUDENT BY REGISTRATION NUMBER
 Router.delete(`${API_URL}/students`, isAuth, deleteStudentByRegIdController)
@@ -55,6 +61,9 @@ Router.get(`${API_URL}/books`, getAllBooksController)
 
 //RETURN BOOKS BY PARAM, NAME OR AUTHOR
 Router.post(`${API_URL}/books`, getAllBooksByParamsController)
+
+//DELETE BOOK BY ISBN OR BOOKNAME
+Router.delete(`${API_URL}/books`, deleteBookController)
 //============= BOOKS ======================================================================================================
 
 

@@ -6,7 +6,8 @@ const {
     getAllBooksBusiness,
     getBooksByAuthorBusiness,
     getBooksByNameBusiness,
-    createBookBusiness
+    createBookBusiness,
+    deleteBookBusiness
  } = require('../Business/Books')
 
 var Controller = {}
@@ -27,7 +28,7 @@ Controller.getAllBooksController = async (req, res) => {
 
 //GET ALL THE AVAILABLE BOOKS BY PARAMS(BOOKNAME OR AUTHOR)
 Controller.getAllBooksByParamsController = async (req, res) => {
-    const { author, name} = req.body
+    const { author, name } = req.body
     let result
     console.log("=> ",author)
     if(author){
@@ -36,6 +37,14 @@ Controller.getAllBooksByParamsController = async (req, res) => {
     if(name){
         result = await getBooksByNameBusiness(name)
     }
+    res.status(result.status).json(result.msg)
+}
+
+
+//DELETE BOOK BY BOOKNAME OR ISBN
+Controller.deleteBookController = async (req, res) => {
+    const { isbn, bookName } = req.body
+    result = await deleteBookBusiness(isbn, bookName)
     res.status(result.status).json(result.msg)
 }
 

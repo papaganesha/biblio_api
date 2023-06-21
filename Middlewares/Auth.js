@@ -37,7 +37,7 @@ const isAuth = (req, res, next) => {
     }
     //CASE TOKEN HAS BEEN DECODED
     else {
-        req.reg_id = decodedToken.id
+        req.regId = decodedToken.id
         next()
     }
 }

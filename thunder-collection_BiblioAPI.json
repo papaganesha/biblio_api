@@ -1,0 +1,300 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "BiblioAPI",
+    "dateExported": "2023-06-21T23:09:35.937Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "e24516dd-9c99-437e-a8de-a07ff9a2555d",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Create new Student",
+            "url": "http://localhost:3000/api/v1/students",
+            "method": "POST",
+            "sortNum": 3750,
+            "created": "2023-05-31T22:23:54.199Z",
+            "modified": "2023-06-21T22:44:53.692Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"name, password and phone as required parameters\",\n  \"name\":\"Joao Pedro\",\n  \"password\": \"12345678\",\n  \"phone\": \"51998196456\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "c62d5d47-0cce-43a9-bf33-9819011c67dc",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "SignIn",
+            "url": "http://localhost:3000/api/v1/signin",
+            "method": "POST",
+            "sortNum": 5625,
+            "created": "2023-05-31T22:23:54.196Z",
+            "modified": "2023-06-21T22:44:57.835Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"regId and password\",\n  \"regId\": \"05f73f99-f2fd-4136-8310-3114233158ca\",\n  \"password\": \"12345678\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "c9c9d122-198b-43df-9892-7b3b3c17365d",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Get Student by Reg_ID",
+            "url": "http://localhost:3000/api/v1/students",
+            "method": "GET",
+            "sortNum": 7500,
+            "created": "2023-05-31T22:23:54.198Z",
+            "modified": "2023-06-21T22:44:44.363Z",
+            "headers": [
+                {
+                    "name": "X-Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA1ZjczZjk5LWYyZmQtNDEzNi04MzEwLTMxMTQyMzMxNThjYSIsImlhdCI6MTY4NzM4NzE4MSwiZXhwIjoxNjg3MzkwNzgxfQ.PYpuKAEpH_nQ-EnmHksSYSrd5wmIROQ_VmJ61NMFwRY"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "95a92f60-0252-48ca-97be-6180ca4d30bf",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Update Student",
+            "url": "http://localhost:3000/api/v1/students",
+            "method": "PUT",
+            "sortNum": 11250,
+            "created": "2023-06-21T22:29:56.153Z",
+            "modified": "2023-06-21T22:45:30.188Z",
+            "headers": [
+                {
+                    "name": "X-Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA1ZjczZjk5LWYyZmQtNDEzNi04MzEwLTMxMTQyMzMxNThjYSIsImlhdCI6MTY4NzM4NzE4MSwiZXhwIjoxNjg3MzkwNzgxfQ.PYpuKAEpH_nQ-EnmHksSYSrd5wmIROQ_VmJ61NMFwRY"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"NAME, PHONE, ONE OR BOTH AS REQUIRED PARAMETER\",\n  \"name\": \"Pedro Pauli\",\n  \"phone\": \"51998196456\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "cf59e0ce-1a9f-4892-b880-e15136a6e29f",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Delete Student",
+            "url": "http://localhost:3000/api/v1/students",
+            "method": "DELETE",
+            "sortNum": 13125,
+            "created": "2023-06-07T22:13:52.882Z",
+            "modified": "2023-06-21T22:46:03.867Z",
+            "headers": [
+                {
+                    "name": "X-Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4NzM4NTc5NiwiZXhwIjoxNjg3Mzg5Mzk2fQ.g7wl-gscvu095AnGVT8WmF9I9-NE6PxJ1wCQp8UmqMw"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "4b32dae0-77f9-4d58-ab61-ef3413627aa3",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Create Book",
+            "url": "http://localhost:3000/api/v1/book",
+            "method": "POST",
+            "sortNum": 14062.5,
+            "created": "2023-05-31T22:23:54.203Z",
+            "modified": "2023-06-21T22:46:15.075Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4NDY4NjM0NiwiZXhwIjoxNjg0NzcyNzQ2fQ.p8gPAbur1928OupJ7TEvKgaqOY6ARinWT546F6QatnA"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"ISBN, NAME, AUTHOR, PUBLISHER, PUBLI_DATE, STOCk AS PARAMETERS\", \n  \"isbn\": \"12391425489\",\n  \"name\": \"Senhor dos aneis\", \n  \"author\": \"Joao Pedro\", \n  \"publisher\": \"Capao Livros\", \n  \"publi_date\": \"2023-09-28\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "29e0cb74-9ba9-46b5-a972-24fe788dcfeb",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Get All Books",
+            "url": "http://localhost:3000/api/v1/books",
+            "method": "GET",
+            "sortNum": 15000,
+            "created": "2023-05-31T22:23:54.192Z",
+            "modified": "2023-05-31T22:35:23.287Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "82732fd3-6cdb-47fb-a81b-34df54abbee2",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Get Books by Param",
+            "url": "http://localhost:3000/api/v1/books",
+            "method": "POST",
+            "sortNum": 15625,
+            "created": "2023-05-31T22:23:54.197Z",
+            "modified": "2023-06-21T23:08:54.613Z",
+            "headers": [
+                {
+                    "name": "X-Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4NDY4NjM0NiwiZXhwIjoxNjg0NzcyNzQ2fQ.p8gPAbur1928OupJ7TEvKgaqOY6ARinWT546F6QatnA"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"author or name\",\n  \"name\": \"THIS COLD HEAVEN: SEVEN SEASONS IN GREENLAND\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "eed31a75-b56e-4389-80ca-8b4d23b38224",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Delete Book",
+            "url": "http://localhost:3000/api/v1/books",
+            "method": "DELETE",
+            "sortNum": 15703.1,
+            "created": "2023-06-21T22:55:15.646Z",
+            "modified": "2023-06-21T23:09:05.448Z",
+            "headers": [
+                {
+                    "name": "X-Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA1ZjczZjk5LWYyZmQtNDEzNi04MzEwLTMxMTQyMzMxNThjYSIsImlhdCI6MTY4NzM4ODE5MywiZXhwIjoxNjg3MzkxNzkzfQ.tTq6C3FqCn-ypUYf4Sm02pkNFiIzB5NzEz97obV2uaY"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"BOOKNAME OR ISBN AS PARAMETER\",\n  \"isbn\": \"9780679758525\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "4fcc5ff9-74f3-4ae7-bf1b-042f3cc98882",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Create Author",
+            "url": "http://localhost:3000/api/v1/authors",
+            "method": "POST",
+            "sortNum": 15781.3,
+            "created": "2023-05-31T22:23:54.202Z",
+            "modified": "2023-06-21T22:45:24.627Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"name and country as parameters\",\n  \"name\":\"Joao Pauloo\",\n  \"country\": \"Brazil\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "b64fbbe6-374a-446b-80e6-e055560f7ec8",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Get All Authors",
+            "url": "http://localhost:3000/api/v1/authors",
+            "method": "GET",
+            "sortNum": 15937.5,
+            "created": "2023-05-31T22:23:54.194Z",
+            "modified": "2023-06-21T22:45:13.107Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4Mjc1ODE3LTBkZjEtNDA0OC1hZTJiLTI4OWJjY2E1NDU1NyIsImlhdCI6MTY4MzczMTEzMCwiZXhwIjoxNjgzODE3NTMwfQ.VZ5Qq5InMnTnsPRiXBYXCajgxeOcSIZAF7r8qo_nBQM"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "8e29547a-35c5-4b8d-a7fc-37942a434cd3",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Create Withdraw",
+            "url": "http://localhost:3000/api/v1/withdraw",
+            "method": "POST",
+            "sortNum": 16093.8,
+            "created": "2023-05-31T22:23:54.200Z",
+            "modified": "2023-06-21T22:45:20.644Z",
+            "headers": [
+                {
+                    "name": "X-Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDkwMDg4LTFmNTEtNDRjNS1iYTY5LTdhNTMwYThiZjY2OCIsImlhdCI6MTY4NjE4MzE1NiwiZXhwIjoxNjg2MTg2NzU2fQ.7lvBIURBqIBkI3Hn797WTlMvS4gUVUavPtub865wuAQ"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"bookName as parameter\",\n  \"name\": \"(i.b.d.) Akula\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "795def48-14c8-42c8-b9f1-005276465edf",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Get All Withdrawals",
+            "url": "http://localhost:3000/api/v1/withdraw",
+            "method": "GET",
+            "sortNum": 16250,
+            "created": "2023-05-31T22:23:54.193Z",
+            "modified": "2023-06-01T00:08:31.462Z",
+            "headers": [
+                {
+                    "name": "X-Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI5MzZmZDc5LWExMmMtNDRmNC04ZTkzLTNjY2QzMTc4NTdiYyIsImlhdCI6MTY4NTU3ODEwMywiZXhwIjoxNjg1NTgxNzAzfQ.idPZBW5G5f8F-1h1UdzFMdoo4nMXFe59_oFw0_2YXgg"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "bf369250-bbaf-4bc3-86e4-8dec139ebd20",
+            "colId": "093d2a73-4ab3-49a1-8d1b-dc977b43b222",
+            "containerId": "",
+            "name": "Giveback Book",
+            "url": "http://localhost:3000/api/v1/giveback",
+            "method": "POST",
+            "sortNum": 16406.3,
+            "created": "2023-05-31T22:23:54.195Z",
+            "modified": "2023-06-21T22:45:09.107Z",
+            "headers": [
+                {
+                    "name": "X-Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDkwMDg4LTFmNTEtNDRjNS1iYTY5LTdhNTMwYThiZjY2OCIsImlhdCI6MTY4NjE4MzE1NiwiZXhwIjoxNjg2MTg2NzU2fQ.7lvBIURBqIBkI3Hn797WTlMvS4gUVUavPtub865wuAQ"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"bookName as parameter\",\n  \"name\": \"(i.b.d.) Akula\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
