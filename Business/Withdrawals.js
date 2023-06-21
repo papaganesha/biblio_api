@@ -8,7 +8,7 @@ const StudentsRepository = require("../Models/Students.js")
 const BooksRepository = require("../Models/Books.js")
 const { addWeeksToDate, daysBetween } = require("../Services/Date.js")
 
-const sequelize  = require('../models/Connect.js')
+const sequelize  = require('../Models/Connect.js')
 
 
 WithdrawalsBusiness = {}

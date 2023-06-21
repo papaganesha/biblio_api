@@ -4,7 +4,7 @@
 
 const { Op } = require('sequelize')
 const AuthorsRepository = require("../Models/Authors.js")
-const sequelize  = require('../models/Connect.js')
+const sequelize  = require('../Models/Connect.js')
 
 AuthorsBusiness = {}
 
