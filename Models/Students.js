@@ -50,9 +50,17 @@ const Student = sequelize.define('student', {
 })
 
 Student.prototype.generateToken = async (id) => {
-    return jwt.sign({ id: id }, "mestredosmagos", {
-        expiresIn: '1h'
+    const accessToken = jwt.sign({ id: id }, "mestredosmagos", {
+        expiresIn: '5minutes'
     })
+
+    const refreshToken = jwt.sign({ id: id }, "mestredosmagos", {
+        expiresIn: '1d'
+    })
+    return {
+        accessToken,
+        refreshToken
+    }
 }
 
 

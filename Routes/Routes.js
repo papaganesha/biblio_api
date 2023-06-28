@@ -54,16 +54,16 @@ Router.delete(`${API_URL}/students`, isAuth, deleteStudentByRegIdController)
 //============= BOOKS ======================================================================================================
 
 //CREATE NEW BOOK, ISBN, NAME, AUTHOR, PUBLISHER, PUBLI_DATE, STOCK AS PARAMETER
-Router.post(`${API_URL}/book`, createBookController)
+Router.post(`${API_URL}/book`, isAuth, createBookController)
 
 //RETURN ALL AVAILABLE BOOKS
-Router.get(`${API_URL}/books`, getAllBooksController)
+Router.get(`${API_URL}/books`, isAuth, getAllBooksController)
 
 //RETURN BOOKS BY PARAM, NAME OR AUTHOR
-Router.post(`${API_URL}/books`, getAllBooksByParamsController)
+Router.post(`${API_URL}/books`, isAuth,getAllBooksByParamsController)
 
 //DELETE BOOK BY ISBN OR BOOKNAME
-Router.delete(`${API_URL}/books`, deleteBookController)
+Router.delete(`${API_URL}/books`, isAuth, deleteBookController)
 //============= BOOKS ======================================================================================================
 
 

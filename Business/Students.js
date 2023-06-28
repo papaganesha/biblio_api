@@ -33,8 +33,9 @@ StudentsBusiness.signInBusiness = async (reg_id, password) => {
         if (student != null) {
             //CASE PASSWORD MATCHES
             if (student.authenticate(password)) {
-                const token = await student.generateToken(student.reg_id)
-                return { status: 202, token: token }
+                const tokens = await student.generateToken(student.reg_id)
+                console.log(tokens.accessToken)
+                return { status: 202, tokens}
             }
             //CASE PASSWORD DONT MATCH
             else {

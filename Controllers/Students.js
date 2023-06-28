@@ -22,7 +22,7 @@ Controller.signInController = async(req, res) => {
     const {regId, password} = req.body
     let result = await signInBusiness(regId, password)
     if(result.status == 202){
-        res.status(result.status).json(result.token)
+        res.status(result.status).json(result.tokens)
     }else{
         res.status(result.status).json(result.msg)
     }
