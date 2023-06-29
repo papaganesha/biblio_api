@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "BiblioAPI",
-    "dateExported": "2023-06-28T20:58:37.305Z",
+    "dateExported": "2023-06-29T03:58:25.720Z",
     "version": "1.1",
     "folders": [],
     "requests": [
@@ -138,11 +138,11 @@
             "method": "GET",
             "sortNum": 15000,
             "created": "2023-06-22T14:37:15.656Z",
-            "modified": "2023-06-28T20:45:33.560Z",
+            "modified": "2023-06-29T01:21:21.456Z",
             "headers": [
                 {
-                    "name": "X-Authorization",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4Nzk4NDg1MSwiZXhwIjoxNjg4MDcxMjUxfQ.vUDT_0iPCdUK_EIYj5EIoE1i4XK9NUxEDyF5cDReusg"
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODAwMTI0MywiZXhwIjoxNjg4MDg3NjQzfQ._CzzOSLYCkuSTO5m3JZMJOHhLqycHDRjYC2e8OL8IoU"
                 }
             ],
             "params": [],
@@ -239,21 +239,21 @@
             "colId": "b48a6aaf-0321-4692-8fc2-ec08aa053840",
             "containerId": "",
             "name": "Create Withdraw",
-            "url": "http://localhost:3000/api/v1/withdraw",
+            "url": "http://localhost:3000/api/v1/withdraws",
             "method": "POST",
             "sortNum": 16093.8,
             "created": "2023-06-22T14:37:15.661Z",
-            "modified": "2023-06-22T14:37:15.661Z",
+            "modified": "2023-06-29T03:54:01.497Z",
             "headers": [
                 {
-                    "name": "X-Authorization",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDkwMDg4LTFmNTEtNDRjNS1iYTY5LTdhNTMwYThiZjY2OCIsImlhdCI6MTY4NjE4MzE1NiwiZXhwIjoxNjg2MTg2NzU2fQ.7lvBIURBqIBkI3Hn797WTlMvS4gUVUavPtub865wuAQ"
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODAwOTAyNywiZXhwIjoxNjg4MDk1NDI3fQ.OkczADBggi-80-_jMPfh15tVN178E7YUM927_WRs_ts"
                 }
             ],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"comment_1\": \"bookName as parameter\",\n  \"name\": \"(i.b.d.) Akula\"\n}",
+                "raw": "{\n  \"comment_1\": \"bookName as parameter\",\n  \"name\": \"INFLUENCIA\"\n}",
                 "form": []
             },
             "tests": []
@@ -263,15 +263,15 @@
             "colId": "b48a6aaf-0321-4692-8fc2-ec08aa053840",
             "containerId": "",
             "name": "Get All Withdrawals",
-            "url": "http://localhost:3000/api/v1/withdraw",
+            "url": "http://localhost:3000/api/v1/withdraws",
             "method": "GET",
             "sortNum": 16250,
             "created": "2023-06-22T14:37:15.662Z",
-            "modified": "2023-06-22T14:37:15.662Z",
+            "modified": "2023-06-29T03:09:42.732Z",
             "headers": [
                 {
-                    "name": "X-Authorization",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI5MzZmZDc5LWExMmMtNDRmNC04ZTkzLTNjY2QzMTc4NTdiYyIsImlhdCI6MTY4NTU3ODEwMywiZXhwIjoxNjg1NTgxNzAzfQ.idPZBW5G5f8F-1h1UdzFMdoo4nMXFe59_oFw0_2YXgg"
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODAwODEzOCwiZXhwIjoxNjg4MDk0NTM4fQ.rj7iPyog3zUNTbookbsNerlZ_jVNGobNDEEqLlvuxcs"
                 }
             ],
             "params": [],
@@ -286,11 +286,11 @@
             "method": "POST",
             "sortNum": 16406.3,
             "created": "2023-06-22T14:37:15.663Z",
-            "modified": "2023-06-22T14:37:15.663Z",
+            "modified": "2023-06-29T03:56:31.324Z",
             "headers": [
                 {
-                    "name": "X-Authorization",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhjMDkwMDg4LTFmNTEtNDRjNS1iYTY5LTdhNTMwYThiZjY2OCIsImlhdCI6MTY4NjE4MzE1NiwiZXhwIjoxNjg2MTg2NzU2fQ.7lvBIURBqIBkI3Hn797WTlMvS4gUVUavPtub865wuAQ"
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODAwOTAyNywiZXhwIjoxNjg4MDk1NDI3fQ.OkczADBggi-80-_jMPfh15tVN178E7YUM927_WRs_ts"
                 }
             ],
             "params": [],
