@@ -8,7 +8,7 @@ const StudentsRepository = require("../Models/Students.js")
 const BooksRepository = require("../Models/Books.js")
 const { addWeeksToDate, daysBetween } = require("../Services/Date.js")
 
-const sequelize  = require('../Models/Connect.js')
+const sequelize = require('../Models/Connect.js')
 
 
 WithdrawalsBusiness = {}
@@ -27,7 +27,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         let book
         try {
             //GET ONE BOOK WHERE BOOK.NAME = BOOKNAME REQUIRED PARAMETER
-            book = await BooksRepository.findOne({ where: { name: bookName } }) 
+            book = await BooksRepository.findOne({ where: { name: bookName } })
         }
         //IN CASE OF ERROR
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
@@ -59,7 +59,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
                 where: {
                     student_reg: regId,
                     book_isbn: book.isbn,
-                    giveback_date:{ [Op.eq]: null}
+                    giveback_date: { [Op.eq]: null }
                 }
             })
         }
@@ -99,7 +99,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         if (student.withdraw > 0 && student.withdraw >= 3) {
             return { status: 400, msg: "Student cant withdraw no more" }
         } else {
-            const transaction = await sequelize.transaction() 
+            const transaction = await sequelize.transaction()
 
             //CREATE NEW WITHDRAWAL
             //CREATE VARIABLE TO CALL REPOSITORES
@@ -129,9 +129,9 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             console.log(`=> ${new Date().toISOString()} => ${addWeeksToDate(new Date(), 1).toISOString()}`)
 
             console.log(`=> create => ${create.affectedRows}`)
-            
-            
-            const transaction2 = await sequelize.transaction() 
+
+
+            const transaction2 = await sequelize.transaction()
 
             //REMOVE STOCK FROM BOOK
             let newStock = book.stock - 1
@@ -156,7 +156,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
                 }
             }
 
-            const transaction3 = await sequelize.transaction() 
+            const transaction3 = await sequelize.transaction()
 
             //ADD WITHDRAW TO STUDENT
             let newWithDraw = student.withdraw + 1
@@ -196,12 +196,15 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
 
 }
 
-WithdrawalsBusiness.getAllWithdrawalsBusiness = async (reg_id) => {
+WithdrawalsBusiness.getAllWithdrawalsBusiness = async (regId) => {
     let withdrawals
     try {
-        withdrawals = await WithdrawalsRepository.findAll({ where: { student_reg: reg_id } })
+        withdrawals = await WithdrawalsRepository.findAll({
+            where: { student_reg: regId }
+        })
     }
     catch (err) {
+        console.log(err)
         if (err.name == 'SequelizeConnectionRefusedError') {
             return { status: 400, msg: 'Connection with DB error' }
         }
@@ -254,7 +257,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
         }
     }
 
-    
+
 
     //CHECK IF BOOK EXISTS
     //CREATE VARIABLE TO CALL REPOSITORES
@@ -288,7 +291,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
             where: {
                 student_reg: regId,
                 book_isbn: book.isbn,
-                giveback_date:{ [Op.eq]: null}
+                giveback_date: { [Op.eq]: null }
             }
         })
     }
@@ -315,7 +318,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
         let diference = daysBetween(withdrawal.return_date, now)
         console.log("==> ", parseInt(diference))
         if (diference > 0) {
-            const transaction = await sequelize.transaction() 
+            const transaction = await sequelize.transaction()
 
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateWithdrawal
@@ -338,7 +341,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                 }
             }
 
-            const transaction2 = await sequelize.transaction() 
+            const transaction2 = await sequelize.transaction()
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateStudent
             try {
@@ -360,7 +363,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                 }
             }
 
-            const transaction3 = await sequelize.transaction() 
+            const transaction3 = await sequelize.transaction()
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateBook
             try {
@@ -388,7 +391,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
         }
 
         else {
-            const transaction = await sequelize.transaction() 
+            const transaction = await sequelize.transaction()
 
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateWithdrawal
@@ -411,7 +414,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                 }
             }
 
-            const transaction2 = await sequelize.transaction() 
+            const transaction2 = await sequelize.transaction()
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateStudent
             try {
@@ -433,7 +436,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
                 }
             }
 
-            const transaction3 = await sequelize.transaction() 
+            const transaction3 = await sequelize.transaction()
             //CREATE VARIABLE TO CALL REPOSITORES
             let updateBook
             try {

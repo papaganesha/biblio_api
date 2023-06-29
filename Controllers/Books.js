@@ -21,6 +21,7 @@ Controller.createBookController = async (req, res) => {
 
 //GET ALL THE AVAILABLE BOOKS
 Controller.getAllBooksController = async (req, res) => {
+    console.debug("BOOKS", req)
     let result = await getAllBooksBusiness()
     res.status(result.status).json(result.msg)
 }

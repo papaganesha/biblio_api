@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken')
 
 const isAuth = (req, res, next) => {
     //GET X-AUTHORIZATION DATA
-    const authHeader = req.get("X-Authorization")
+    const authHeader = req.get("Authorization")
 
     //CASE DONT FIND NOTHING ON X-AUTHORIZATION
     if (!authHeader) {

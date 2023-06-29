@@ -79,10 +79,10 @@ Router.get(`${API_URL}/authors`, getAllAuthorsController)
 
 //============= WITHDRAWS AND GIVEBACK =====================================================================================
 //WITHDRAW A BOOK, BOOKNAME AND REQ.REG_ID AS PARAMS
-Router.post(`${API_URL}/withdraw`, isAuth, createWithdrawalController)
+Router.post(`${API_URL}/withdraws`, isAuth, createWithdrawalController)
 
 //GET ALL WITHDRAWS FOR AUTHENTICATED STUDENT
-Router.get(`${API_URL}/withdraw`, isAuth, getAllWithdrawalsController)
+Router.get(`${API_URL}/withdraws`, isAuth, getAllWithdrawalsController)
 
 //RETURN A BOOK, BOOKNAME AND REQ.REG_ID AS PARAMS
 Router.post(`${API_URL}/giveback`, isAuth, givebackController)
