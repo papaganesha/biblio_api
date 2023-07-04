@@ -4,7 +4,7 @@ const sequelize = require("./Connect.js")
 
 const Withdrawal = sequelize.define('withdrawal', {
     // Model attributes are defined here
-    withdrawal_id: {
+    id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
@@ -13,6 +13,11 @@ const Withdrawal = sequelize.define('withdrawal', {
         type: DataTypes.UUID,
         allowNull: false, 
     },
+    book_name: {
+        type: DataTypes.TEXT,
+        allowNull: false, 
+    },
+
     student_reg: {
         type: DataTypes.UUID,
         allowNull: false

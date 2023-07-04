@@ -61,6 +61,7 @@ BooksBusiness.getAllBooksBusiness = async () => {
     try {
         //GET ALL BOOKS WHERE STOCK IS GREATHER THAN 0
         books = await BooksRepository.findAll({
+            limit: 300,
             where: {
                 stock: {
                     [Op.gt]: 0

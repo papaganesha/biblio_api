@@ -33,7 +33,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
         catch (err) {
             if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
                 return { status: 400, msg: 'Error while searching Book, try again' }
@@ -41,7 +41,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         }
         // CASE BOOK DOENST EXISTS
         if (book == null || book.length == 0) {
-            return { status: 400, msg: "Inexistent book" }
+            return { status: 400, msg: "Livro inexistente" }
         }
         else {
             // CASE BOOK DOENTS HAVE STOCK
@@ -67,7 +67,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
         catch (err) {
             if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
                 return { status: 400, msg: 'Error while searching Withdraws, try again' }
@@ -89,7 +89,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
         catch (err) {
             if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
                 return { status: 400, msg: 'Error while searching Student info, try again' }
@@ -107,6 +107,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             try {
                 create = await WithdrawalsRepository.create({
                     book_isbn: book.isbn,
+                    book_name: book.name,
                     student_reg: student.reg_id,
                     start_date: new Date().toISOString(),
                     return_date: addWeeksToDate(new Date(), 1).toISOString()
@@ -118,7 +119,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             catch (err) {
                 await transaction2.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
                     return { status: 400, msg: 'Error while creating Withdrawal, try again' }
@@ -149,7 +150,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             catch (err) {
                 await transaction2.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
                     return { status: 400, msg: 'Error while updating Book, try again' }
@@ -174,10 +175,10 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
             catch (err) {
                 await transaction3.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
-                    return { status: 400, msg: 'Error while updating Student, try again' }
+                    return { status: 400, msg: 'Erro atualizando Estudante, tente novamente' }
                 }
             }
 
@@ -191,7 +192,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
     }
     //MISSING PARAMETERS
     else {
-        return { status: 400, msg: 'Missing parameters, try again' }
+        return { status: 400, msg: 'Parametros insuficientes, tente novamente' }
     }
 
 }
@@ -200,21 +201,22 @@ WithdrawalsBusiness.getAllWithdrawalsBusiness = async (regId) => {
     let withdrawals
     try {
         withdrawals = await WithdrawalsRepository.findAll({
+            attributes: {exclude: ['createdAt', 'updatedAt']},
             where: { student_reg: regId }
         })
     }
     catch (err) {
         console.log(err)
         if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            return { status: 400, msg: 'Erro de conexão ao Banco' }
         }
         else {
-            return { status: 400, msg: 'Error while getting Withdraws, try again' }
+            return { status: 400, msg: 'Erro buscando retiradas, tente novamente' }
         }
     }
 
     if (withdrawals == null || withdrawals.length == 0) {
-        return { status: 400, msg: "Not a single withdrawal registered" }
+        return { status: 400, msg: "Nenhum livro alugado" }
     }
     else {
         return { status: 200, msg: withdrawals }
@@ -250,7 +252,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
     //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
     catch (err) {
         if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            return { status: 400, msg: 'Erro de conexão ao Banco' }
         }
         else {
             return { status: 400, msg: 'Error while getting Student, try again' }
@@ -273,15 +275,15 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
     //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
     catch (err) {
         if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            return { status: 400, msg: 'Erro de conexão ao Banco' }
         }
         else {
-            return { status: 400, msg: 'Error while getting Book, try again' }
+            return { status: 400, msg: 'Erro ao buscar Livro, tente novamente' }
         }
     }
 
     if (book == null || book.length == 0) {
-        return { status: 400, msg: 'Inexistent book' }
+        return { status: 400, msg: 'Livro inexistente' }
     }
 
     //CREATE VARIABLE TO CALL REPOSITORES
@@ -299,17 +301,17 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
     //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
     catch (err) {
         if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            return { status: 400, msg: 'Erro de conexão ao Banco' }
         }
         else {
-            return { status: 400, msg: 'Error while getting Withdrawal, try again' }
+            return { status: 400, msg: 'Erro buscando retirada, tente novamente' }
         }
     }
 
 
     //CHECK IF STUDENT DONT HAVE ANY WITHDRAWS FOR THIS BOOK
     if (withdrawal == null || withdrawal.length == 0) {
-        return { status: 400, msg: "Not a single withdrawal registered for this book" }
+        return { status: 400, msg: "Livro não foi alugado" }
     }
 
     if (withdrawal.giveback_date == null) {
@@ -334,10 +336,10 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
             catch (err) {
                 transaction.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
-                    return { status: 400, msg: 'Error while updating Withdrawal, try again' }
+                    return { status: 400, msg: 'Erro atualizando retirada, tente novamente' }
                 }
             }
 
@@ -356,10 +358,10 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
             catch (err) {
                 transaction2.commit()
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
-                    return { status: 400, msg: 'Error while updating Student, try again' }
+                    return { status: 400, msg: 'Erro atualizando Estudande, tente novamente' }
                 }
             }
 
@@ -378,15 +380,15 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
             catch (err) {
                 transaction2.commit()
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
-                    return { status: 400, msg: 'Error while updating Book, try again' }
+                    return { status: 400, msg: 'Erro atualizando Livro, tente novamente' }
                 }
             }
             //NEED TO CHECK IF ONE OF THOSE IS NOT GOOD, WHAT TO DO?
             if (updateWithdrawal && updateBook && updateStudent) {
-                return { status: 201, msg: `Book returned with ${diference} late` }
+                return { status: 201, msg: `Livro retornado ${diference} dias de atraso` }
             }
         }
 
@@ -407,10 +409,10 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
             catch (err) {
                 transaction.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
-                    return { status: 400, msg: 'Error while updating Withdrawal, try again' }
+                    return { status: 400, msg: 'Erro atualizando retirada, tente novamente' }
                 }
             }
 
@@ -429,10 +431,10 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
             catch (err) {
                 transaction2.commit()
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
-                    return { status: 400, msg: 'Error while updating Student, try again' }
+                    return { status: 400, msg: 'Erro atualizando Estudante, tente novamente' }
                 }
             }
 
@@ -451,22 +453,22 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
             catch (err) {
                 transaction3.rollback()
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
-                    return { status: 400, msg: 'Error while updating Book, try again' }
+                    return { status: 400, msg: 'Erro atualizando Livro, tente novamente' }
                 }
             }
 
             //NEED TO CHECK IF ONE OF THOSE IS NOT GOOD, WHAT TO DO?
             if (updateWithdrawal && updateBook && updateStudent) {
-                return { status: 201, msg: "Giveback registered" }
+                return { status: 201, msg: "Retorno registrado" }
             }
         }
     }
     //IN CASE STUDENT ALREADY RETURNED THIS BOOK
     else {
-        return { status: 201, msg: 'Already returned book' }
+        return { status: 201, msg: 'Livro ja foi retornado' }
     }
 }
 
