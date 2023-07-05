@@ -7,6 +7,7 @@ const {
     getBooksByAuthorBusiness,
     getBooksByNameBusiness,
     createBookBusiness,
+    updateBookBusiness,
     deleteBookBusiness
  } = require('../Business/Books')
 
@@ -41,6 +42,14 @@ Controller.getAllBooksByParamsController = async (req, res) => {
     res.status(result.status).json(result.msg)
 }
 
+//UPDATE BOOK BY BOOKNAME
+Controller.updateBooksByNameController = async (req, res) => {
+    const {regId} = req
+    const {name, newName, author, publisher, publiDate, stock} = req.body
+    console.log(regId, req.body)
+    let result = await updateBookBusiness(regId, name, newName, author, publisher, publiDate, stock)
+    res.status(result.status).json(result.msg)
+}
 
 //DELETE BOOK BY BOOKNAME OR ISBN
 Controller.deleteBookController = async (req, res) => {

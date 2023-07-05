@@ -27,12 +27,12 @@ AuthorsBusiness.createAuthorBusiness = async (name, country) => {
         console.log("2 -- ", transaction)
         await transaction.rollback()
         if (err.name == 'SequelizeUniqueConstraintError') {
-            return { status: 400, msg: 'Author already exists' }
+            return { status: 400, msg: 'Autor já existe' }
         } else if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            return { status: 400, msg: 'Erro de conexão ao Banco' }
         }
         else {
-            return { status: 400, msg: 'Error while creating Author, try again' }
+            return { status: 400, msg: 'Erro criando Autor, tente novamente' }
         }
     }
     console.log("1 -- ", transaction)
@@ -51,7 +51,7 @@ AuthorsBusiness.getAllAuthorsBusiness = async () => {
     //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
     catch (err) {
         if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            return { status: 400, msg: 'Erro de conexão com o Banco' }
         }
         else {
             return { status: 400, msg: 'Error while getting Authors, try again' }
@@ -60,7 +60,7 @@ AuthorsBusiness.getAllAuthorsBusiness = async () => {
 
     //IF AUTHORS ARE NULL OR INVALID
     if (authors == null || authors.length == 0) {
-        return { status: 200, msg: 'Not a single author with registered' }
+        return { status: 200, msg: 'Nenhum Autor registrado' }
     } 
     //RETURNING AUTHORS
     else {

@@ -36,7 +36,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
                 return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
-                return { status: 400, msg: 'Error while searching Book, try again' }
+                return { status: 400, msg: 'Erro buscando Livro, tente novamente' }
             }
         }
         // CASE BOOK DOENST EXISTS
@@ -46,7 +46,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
         else {
             // CASE BOOK DOENTS HAVE STOCK
             if (book.stock == 0) {
-                return { status: 400, msg: "Unavailable book" }
+                return { status: 400, msg: "Livro indisponivel" }
             }
         }
 
@@ -70,13 +70,13 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
                 return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
-                return { status: 400, msg: 'Error while searching Withdraws, try again' }
+                return { status: 400, msg: 'Erro buscando Retiradas, tente novamente' }
             }
         }
 
         //IN CASE STUDENT ALREADY HAS WITHDRAW FOR THIS BOOK
         if (withdrawal != null) {
-            return { status: 400, msg: "Student cant withdraw the same book twice." }
+            return { status: 400, msg: "Estudante não pode retirar o mesmo livro duas vezes." }
         }
 
         //CHECK FOR STUDENT WITHDRAWALS NBR
@@ -92,12 +92,12 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
                 return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
-                return { status: 400, msg: 'Error while searching Student info, try again' }
+                return { status: 400, msg: 'Erro buscando informações do Estudande, tente novamente' }
             }
         }
 
         if (student.withdraw > 0 && student.withdraw >= 3) {
-            return { status: 400, msg: "Student cant withdraw no more" }
+            return { status: 400, msg: "Estudante não pode Retirar mais livros" }
         } else {
             const transaction = await sequelize.transaction()
 
@@ -122,7 +122,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
                     return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
-                    return { status: 400, msg: 'Error while creating Withdrawal, try again' }
+                    return { status: 400, msg: 'Erro criando Retirada, tente novamente' }
                 }
             }
 
@@ -153,7 +153,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
                     return { status: 400, msg: 'Erro de conexão ao Banco' }
                 }
                 else {
-                    return { status: 400, msg: 'Error while updating Book, try again' }
+                    return { status: 400, msg: 'Erro atualizando Livro, tente novamente' }
                 }
             }
 
@@ -184,7 +184,7 @@ WithdrawalsBusiness.createWithdrawalBusiness = async (bookName, regId) => {
 
             //NEED TO CHECK IF ONE OF THOSE IS NOT GOOD, WHAT TO DO?
             if (updateBook && updateStudent) {
-                return { status: 201, msg: "Withdrawal registered" }
+                return { status: 201, msg: "Retirada registrada" }
             }
 
         }
@@ -202,7 +202,10 @@ WithdrawalsBusiness.getAllWithdrawalsBusiness = async (regId) => {
     try {
         withdrawals = await WithdrawalsRepository.findAll({
             attributes: {exclude: ['createdAt', 'updatedAt']},
-            where: { student_reg: regId }
+            where: { student_reg: regId },
+            order: [
+                ['done', 'ASC'],
+            ]
         })
     }
     catch (err) {
@@ -255,7 +258,7 @@ WithdrawalsBusiness.givebackBusiness = async (bookName, regId) => {
             return { status: 400, msg: 'Erro de conexão ao Banco' }
         }
         else {
-            return { status: 400, msg: 'Error while getting Student, try again' }
+            return { status: 400, msg: 'Erro buscando Estudante, tente novamente' }
         }
     }
 

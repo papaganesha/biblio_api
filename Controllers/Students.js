@@ -48,9 +48,11 @@ Controller.getStudentByRegController = async (req, res) => {
 Controller.updateStudentByRegIdController = async (req, res) => {
     const {regId} = req
     const {name, phone} = req.body
+    console.log(regId, req.body)
     let result = await updateStudentBusiness(regId, name, phone)
     res.status(result.status).json(result.msg)
 }
+
 //DELETE STUDENT BY REGISTRATION NUMBER
 Controller.deleteStudentByRegIdController = async (req, res) => {
     const {regId} = req

@@ -8,7 +8,8 @@ const {
     createBookController,
     getAllBooksController,
     getAllBooksByParamsController,
-    deleteBookController
+    deleteBookController,
+    updateBooksByNameController
 } = require('../Controllers/Books')
 
 
@@ -62,6 +63,9 @@ Router.get(`${API_URL}/books`, isAuth, getAllBooksController)
 //RETURN BOOKS BY PARAM, NAME OR AUTHOR
 Router.post(`${API_URL}/books`, isAuth,getAllBooksByParamsController)
 
+//UPDATE BOOKS BY NAME, NAME OR AUTHOR
+Router.put(`${API_URL}/books`, isAuth,updateBooksByNameController)
+
 //DELETE BOOK BY ISBN OR BOOKNAME
 Router.delete(`${API_URL}/books`, isAuth, deleteBookController)
 //============= BOOKS ======================================================================================================
@@ -69,10 +73,10 @@ Router.delete(`${API_URL}/books`, isAuth, deleteBookController)
 
 //============= AUTHORS ====================================================================================================
 //CREATE NEW AUTHOR, NAME AND COUNTRY AS PARAMETERS
-Router.post(`${API_URL}/authors`, createAuthorController)
+Router.post(`${API_URL}/authors`, isAuth, createAuthorController)
 
 //GET ALL AUTHORS
-Router.get(`${API_URL}/authors`, getAllAuthorsController)
+Router.get(`${API_URL}/authors`, isAuth, getAllAuthorsController)
 //============= AUTHORS ====================================================================================================
 
 

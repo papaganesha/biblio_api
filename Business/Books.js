@@ -36,9 +36,9 @@ BooksBusiness.createBookBusiness = async (isbn, name, author, publisher, publi_d
         catch (err) {
             await transaction.rollback()
             if (err.name == 'SequelizeUniqueConstraintError') {
-                return { status: 400, msg: 'Book with this ISBN already exists' }
+                return { status: 400, msg: 'Livro com este ISBN já existe' }
             } else if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
 
         }
@@ -48,7 +48,7 @@ BooksBusiness.createBookBusiness = async (isbn, name, author, publisher, publi_d
     }
     //MISSING PARAMETERS
     else {
-        return { status: 400, msg: 'Missing parameters, try again' }
+        return { status: 400, msg: 'Parametros insuficientes, tente novamente' }
     }
 
 }
@@ -77,15 +77,15 @@ BooksBusiness.getAllBooksBusiness = async () => {
     //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
     catch (err) {
         if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            return { status: 400, msg: 'Erro de conexão ao Banco' }
         } else {
-            return { status: 400, msg: 'Error while getting books, try again' }
+            return { status: 400, msg: 'Erro buscando Livros, tente novamente' }
         }
     }
 
     //IF BOOKS ARE NULL OR INVALID
     if (books == null || books.length == 0) {
-        return { status: 200, msg: "Not a single book registered" }
+        return { status: 200, msg: "Nenhum livro registrado" }
     }
     //RETURNING BOOKS
     else {
@@ -116,15 +116,15 @@ BooksBusiness.getBooksByAuthorBusiness = async (authorName) => {
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
         catch (err) {
             if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             } else {
-                return { status: 400, msg: 'Error while getting books, try again' }
+                return { status: 400, msg: 'Erro buscando Livros, tente novamente' }
             }
         }
 
         //IF BOOKS ARE NULL OR INVALID
         if (books == null || books.length == 0) {
-            return { status: 400, msg: 'Inexistent Books for this Author' }
+            return { status: 400, msg: 'Nenhum livro para este Autor' }
         }
         //RETURNING BOOKS
         else {
@@ -133,7 +133,7 @@ BooksBusiness.getBooksByAuthorBusiness = async (authorName) => {
     }
     //MISSING PARAMETERS
     else {
-        return { status: 400, msg: 'Missing parameters, try again' }
+        return { status: 400, msg: 'Parametros insuficientes, tente novamente' }
     }
 }
 
@@ -161,15 +161,15 @@ BooksBusiness.getBooksByNameBusiness = async (bookName) => {
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
         catch (err) {
             if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             } else {
-                return { status: 400, msg: 'Error while getting books, try again' }
+                return { status: 400, msg: 'Erro buscando Livros, tente novamente' }
             }
         }
 
         //IF BOOKS ARE NULL OR INVALID
         if (books == null || books.length == 0) {
-            return { status: 400, msg: 'Inexistent Books with this name' }
+            return { status: 400, msg: 'Livro com este nome não existe' }
         }
         //RETURNING BOOKS
         else {
@@ -178,7 +178,189 @@ BooksBusiness.getBooksByNameBusiness = async (bookName) => {
     }
     //MISSING PARAMETERS
     else {
-        return { status: 400, msg: 'Missing parameters, try again' }
+        return { status: 400, msg: 'Parametros insuficientes, tente novamente' }
+    }
+}
+
+//UPDATE BOOKS BY BOOKNAME
+//RETURN MESSAGE
+BooksBusiness.updateBookBusiness = async (regId, bookName, newBookName, author, publisher, publiDate, stock) => {
+    //CHECK PARAMETERS
+    if (regId || bookName || newBookName || author || publisher || publiDate || stock) {
+        //CREATE VARIABLE TO CALL REPOSITORES
+        let books
+        let updateds = []
+        let response = ""
+
+        try {
+            //GET ALL BOOKS WHERE BOOKANME IS THE SAME AS THE PARAMETER RECEIVED AND STOCK IS GREATER THAN 0
+            books = await BooksRepository.findOne({
+                where: {
+                    name: bookName
+                    }
+                })
+        }
+        //IN CASE OF ERROR
+        //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+        catch (err) {
+            if (err.name == 'SequelizeConnectionRefusedError') {
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
+            } else {
+                return { status: 400, msg: 'Erro buscando Livros, tente novamente' }
+            }
+        }
+
+        //IF BOOKS ARE NULL OR INVALID
+        if (books == null || books.length == 0) {
+            return { status: 400, msg: 'Livro com este nome não existe' }
+        }
+        //UPDATING
+        else {
+            if(newBookName){
+                const transaction = await sequelize.transaction()
+                let updateName
+                    try {
+                        updateName = await BooksRepository.update(
+                            {
+                                name: newBookName,
+                            },
+                            { where: { name: bookName } },
+                            { transaction }
+                        )
+                        await transaction.commit()
+                    }
+                    //IN CASE OF ERROR
+                    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                    catch (err) {
+                        await transaction.rollback()
+                        if (err.name == 'SequelizeConnectionRefusedError') {
+                            return { status: 400, msg: 'Erro de conexão ao Banco' }
+                        }
+                        else {
+                            return { status: 400, msg: 'Erro atualizando Livro, tente novamente' }
+                        }
+                    }
+                    updateds.push('Nome')
+            }
+            if(author){
+                const transaction = await sequelize.transaction()
+                let updateAuthor
+                    try {
+                        updateAuthor = await BooksRepository.update(
+                            {
+                                author,
+                            },
+                            { where: { name: bookName } },
+                            { transaction }
+                        )
+                        await transaction.commit()
+                    }
+                    //IN CASE OF ERROR
+                    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                    catch (err) {
+                        await transaction.rollback()
+                        if (err.name == 'SequelizeConnectionRefusedError') {
+                            return { status: 400, msg: 'Erro de conexão ao Banco' }
+                        }
+                        else {
+                            return { status: 400, msg: 'Erro atualizando Livro, tente novamente' }
+                        }
+                    }
+                    updateds.push('Autor')
+            }
+            if(publisher){
+                const transaction = await sequelize.transaction()
+                let updatePublisher
+                    try {
+                        updatePublisher = await BooksRepository.update(
+                            {
+                                publisher: publisher,
+                            },
+                            { where: { name: bookName } },
+                            { transaction }
+                        )
+                        await transaction.commit()
+                    }
+                    //IN CASE OF ERROR
+                    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                    catch (err) {
+                        await transaction.rollback()
+                        if (err.name == 'SequelizeConnectionRefusedError') {
+                            return { status: 400, msg: 'Erro de conexão ao Banco' }
+                        }
+                        else {
+                            return { status: 400, msg: 'Erro atualizando Livro, tente novamente' }
+                        }
+                    }
+                    updateds.push('Editora')
+            }
+            if(publiDate){
+                const transaction = await sequelize.transaction()
+                let updatePubliDate
+                    try {
+                        updatePubliDate = await BooksRepository.update(
+                            {
+                                publi_date: publiDate,
+                            },
+                            { where: { name: bookName } },
+                            { transaction }
+                        )
+                        await transaction.commit()
+                    }
+                    //IN CASE OF ERROR
+                    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                    catch (err) {
+                        await transaction.rollback()
+                        if (err.name == 'SequelizeConnectionRefusedError') {
+                            return { status: 400, msg: 'Erro de conexão ao Banco' }
+                        }
+                        else {
+                            return { status: 400, msg: 'Erro atualizando Livro, tente novamente' }
+                        }
+                    }
+                    updateds.push('Data de Publicação')
+            }
+            if(stock){
+                const transaction = await sequelize.transaction()
+                let updateStock
+                    try {
+                         updateStock = await BooksRepository.update(
+                            {
+                                stock
+                            },
+                            { where: { name: bookName } },
+                            { transaction }
+                        )
+                        await transaction.commit()
+                    }
+                    //IN CASE OF ERROR
+                    //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
+                    catch (err) {
+                        await transaction.rollback()
+                        if (err.name == 'SequelizeConnectionRefusedError') {
+                            return { status: 400, msg: 'Erro de conexão ao Banco' }
+                        }
+                        else {
+                            return { status: 400, msg: 'Erro atualizando Livro, tente novamente' }
+                        }
+                    }
+                    updateds.push('Estoque')
+            }
+
+            for(let i of updateds){
+                response+= `${i}, `
+            }
+
+            
+            console.log(response)
+            let returnStr = response.slice(0, -2)
+
+            return {status: 201, msg: `Para o Livro ${bookName} foram atualizados os seguintes campos: ${returnStr} `}
+        }
+    }
+    //MISSING PARAMETERS
+    else {
+        return { status: 400, msg: 'Parametros insuficientes, tente novamente' }
     }
 }
 
@@ -200,9 +382,9 @@ BooksBusiness.deleteBookBusiness = async (isbn, bookName) => {
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 } else {
-                    return { status: 400, msg: 'Error while getting books, try again' }
+                    return { status: 400, msg: 'Erro buscando Livros, tente novamente' }
                 }
             }
 
@@ -225,14 +407,14 @@ BooksBusiness.deleteBookBusiness = async (isbn, bookName) => {
                     await transaction.rollback()
 
                     if (err.name == 'SequelizeConnectionRefusedError') {
-                        return { status: 400, msg: 'Connection with DB error' }
+                        return { status: 400, msg: 'Erro de conexão ao Banco' }
                     } else {
-                        return { status: 400, msg: 'Error while getting books, try again' }
+                        return { status: 400, msg: 'Erro buscando Livros, tente novamente' }
                     }
                 }
-                return { status: 201, msg: `${getBook.name} removed with success` }
+                return { status: 201, msg: `${getBook.name} removido com sucesso` }
             } else {
-                return { status: 400, msg: 'Inexistent Book' }
+                return { status: 400, msg: 'Livro Inexistente' }
             }
 
         }
@@ -249,9 +431,9 @@ BooksBusiness.deleteBookBusiness = async (isbn, bookName) => {
             //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
             catch (err) {
                 if (err.name == 'SequelizeConnectionRefusedError') {
-                    return { status: 400, msg: 'Connection with DB error' }
+                    return { status: 400, msg: 'Erro de conexão ao Banco' }
                 } else {
-                    return { status: 400, msg: 'Error while getting books, try again' }
+                    return { status: 400, msg: 'Erro buscando Livros, tente novamente' }
                 }
             }
             console.log(getBook)
@@ -273,14 +455,14 @@ BooksBusiness.deleteBookBusiness = async (isbn, bookName) => {
                 catch (err) {
                     await transaction.rollback()
                     if (err.name == 'SequelizeConnectionRefusedError') {
-                        return { status: 400, msg: 'Connection with DB error' }
+                        return { status: 400, msg: 'Erro de conexão ao Banco' }
                     } else {
-                        return { status: 400, msg: 'Error while getting books, try again' }
+                        return { status: 400, msg: 'Erro buscando Livros, tente novamente' }
                     }
                 }
-                return { status: 201, msg: `${bookName} removed with success` }
+                return { status: 201, msg: `${bookName} removido com sucesso` }
             } else {
-                return { status: 400, msg: 'Inexistent Book' }
+                return { status: 400, msg: 'Livro inexistente' }
             }
 
         }
@@ -288,7 +470,7 @@ BooksBusiness.deleteBookBusiness = async (isbn, bookName) => {
     }
     //MISSING PARAMETERS
     else {
-        return { status: 400, msg: 'Missing parameters, try again' }
+        return { status: 400, msg: 'Parametros insuficientes, tente novamente' }
     }
 }
 

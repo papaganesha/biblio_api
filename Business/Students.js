@@ -23,10 +23,10 @@ StudentsBusiness.signInBusiness = async (reg_id, password) => {
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
         catch (err) {
             if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
-                return { status: 400, msg: 'Error while signIn Student, try again' }
+                return { status: 400, msg: 'Erro ao autenticar Estudante, tente novamente' }
             }
         }
 
@@ -39,15 +39,15 @@ StudentsBusiness.signInBusiness = async (reg_id, password) => {
             }
             //CASE PASSWORD DONT MATCH
             else {
-                return { status: 401, msg: 'Wrong password' }
+                return { status: 401, msg: 'Senha incorreta' }
             }
         } else {
-            return { status: 400, msg: 'Student doesnt exists, try again' }
+            return { status: 400, msg: 'Estudante não existe, tente novamente' }
         }
     }
     //MISSING PARAMETERS
     else {
-        return { status: 400, msg: 'Missing parameters, try again' }
+        return { status: 400, msg: 'Parametros insuficientes, tente novamente' }
     }
 }
 
@@ -77,13 +77,13 @@ StudentsBusiness.createStudentBusiness = async (name, password, phone) => {
         catch (err) {
             await transaction.rollback()
             if (err.name == 'SequelizeUniqueConstraintError') {
-                return { status: 400, msg: 'Student with this phone already exists' }
+                return { status: 400, msg: 'Estudante com este telefone já existe' }
             }
             else if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
-                return { status: 400, msg: 'Error while creating Student, try again' }
+                return { status: 400, msg: 'Erro criando Estudante, tente novamente' }
             }
         }
 
@@ -91,6 +91,8 @@ StudentsBusiness.createStudentBusiness = async (name, password, phone) => {
         //IF THE INSERTION HAS OCCURRED
         return { status: 201, msg: { id: create.reg_id } }
 
+    }else{
+        return { status: 400, msg: 'Parametros insuficientes, tente novamente' }
     }
 
 }
@@ -109,16 +111,16 @@ StudentsBusiness.getStudentByRegBusiness = async (reg_id) => {
     //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
     catch (err) {
         if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            return { status: 400, msg: 'Erro de conexão ao Banco' }
         }
         else {
-            return { status: 400, msg: 'Error while creating Student, try again' }
+            return { status: 400, msg: 'Erro criando Estudante, tente novamente' }
         }
     }
 
     //IF STUDENT IS NULL OR INVALID
     if (student == null || student.length == 0) {
-        return { status: 400, msg: "Inexistent Student" }
+        return { status: 400, msg: "Estudante não existe, tente novamente" }
     }
     //RETURNING STUDENT
     else {
@@ -130,6 +132,7 @@ StudentsBusiness.getStudentByRegBusiness = async (reg_id) => {
 //RETURN NEW STUDENT REG_ID
 StudentsBusiness.updateStudentBusiness = async (regId, name, phone) => {
     //CHECK PARAMETER
+    console.log(name, phone)
     if (name || phone) {
         let getStudent
         try {
@@ -145,10 +148,10 @@ StudentsBusiness.updateStudentBusiness = async (regId, name, phone) => {
         //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
         catch (err) {
             if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
-                return { status: 400, msg: 'Error while deleting Student, try again' }
+                return { status: 400, msg: 'Erro deletando Estudante, tente novamente' }
             }
         }
 
@@ -172,16 +175,16 @@ StudentsBusiness.updateStudentBusiness = async (regId, name, phone) => {
                 catch (err) {
                     await transaction.rollback()
                     if (err.name == 'SequelizeUniqueConstraintError') {
-                        return { status: 400, msg: 'Student with this phone already exists' }
+                        return { status: 400, msg: 'Estudante com este telefone já existe' }
                     }
                     else if (err.name == 'SequelizeConnectionRefusedError') {
-                        return { status: 400, msg: 'Connection with DB error' }
+                        return { status: 400, msg: 'Erro de conexão ao Banco' }
                     }
                     else {
-                        return { status: 400, msg: 'Error while updating Student, try again' }
+                        return { status: 400, msg: 'Erro atualizando Estudante, tente novamente' }
                     }
                 }
-                return {status: 201, msg: `${getStudent.name} name and phone updated`}
+                return {status: 201, msg: `Nome: ${getStudent.name} e telefone ${getStudent.name} atualizados para ${name} e ${phone}`}
 
             }
             if (name) {
@@ -199,13 +202,13 @@ StudentsBusiness.updateStudentBusiness = async (regId, name, phone) => {
                 catch (err) {
                     await transaction.rollback()
                     if (err.name == 'SequelizeConnectionRefusedError') {
-                        return { status: 400, msg: 'Connection with DB error' }
+                        return { status: 400, msg: 'Erro de conexão ao Banco' }
                     }
                     else {
-                        return { status: 400, msg: 'Error while updating Student, try again' }
+                        return { status: 400, msg: 'Erro atualizando Estudande, tente novamente' }
                     }
                 }
-                return {status: 201, msg: `${getStudent.name} name updated`}
+                return {status: 201, msg: `Nome de ${getStudent.name} atualizado para ${name}`}
 
             }
             if (phone) {
@@ -223,25 +226,25 @@ StudentsBusiness.updateStudentBusiness = async (regId, name, phone) => {
                 catch (err) {
                     await transaction.rollback()
                     if (err.name == 'SequelizeUniqueConstraintError') {
-                        return { status: 400, msg: 'Student with this phone already exists' }
+                        return { status: 400, msg: 'Estudante com este telefone ja existe' }
                     }
                     else if (err.name == 'SequelizeConnectionRefusedError') {
-                        return { status: 400, msg: 'Connection with DB error' }
+                        return { status: 400, msg: 'Erro de conexão ao Banco' }
                     }
                     else {
-                        return { status: 400, msg: 'Error while updating Student, try again' }
+                        return { status: 400, msg: 'Erro atualizando Estudante, tente novamente' }
                     }
                 }
-                return {status: 201, msg: `${getStudent.name} phone updated`}
+                return {status: 201, msg: `Telefone ${getStudent.phone} atualizado para ${phone}`}
             }
             
         }
         //MISSING PARAMETERS
         else {
-            return { status: 400, msg: 'Missing parameters, try again' }
+            return { status: 400, msg: 'Parametros insuficientes, tente novamente' }
         }
     } else {
-        return { status: 400, msg: `Student doenst exists, try again` }
+        return { status: 400, msg: `Estudante não existe, tente novamente` }
     }
 
 }
@@ -264,10 +267,10 @@ StudentsBusiness.deleteStudentBusiness = async (regId) => {
     //CHECK FOR ERROR.NAME, AND RETURN RESPONSE STATUS AND MSG WITH ERROR DESCRIPTION
     catch (err) {
         if (err.name == 'SequelizeConnectionRefusedError') {
-            return { status: 400, msg: 'Connection with DB error' }
+            return { status: 400, msg: 'Erro de conexão ao Banco' }
         }
         else {
-            return { status: 400, msg: 'Error while deleting Student, try again' }
+            return { status: 400, msg: 'Erro deletando Estudante, tente novamente' }
         }
     }
 
@@ -290,10 +293,10 @@ StudentsBusiness.deleteStudentBusiness = async (regId) => {
         catch (err) {
             await transaction.rollback()
             if (err.name == 'SequelizeConnectionRefusedError') {
-                return { status: 400, msg: 'Connection with DB error' }
+                return { status: 400, msg: 'Erro de conexão ao Banco' }
             }
             else {
-                return { status: 400, msg: 'Error while deleting Student, try again' }
+                return { status: 400, msg: 'Erro deletando Estudante, tente novamente' }
             }
         }
 
