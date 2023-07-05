@@ -54,6 +54,7 @@ Controller.updateBooksByNameController = async (req, res) => {
 //DELETE BOOK BY BOOKNAME OR ISBN
 Controller.deleteBookController = async (req, res) => {
     const { isbn, bookName } = req.body
+    console.log(req.body)
     result = await deleteBookBusiness(isbn, bookName)
     res.status(result.status).json(result.msg)
 }
