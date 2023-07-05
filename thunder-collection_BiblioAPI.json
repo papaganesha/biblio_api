@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "BiblioAPI",
-    "dateExported": "2023-06-29T03:58:25.720Z",
+    "dateExported": "2023-07-05T19:12:34.219Z",
     "version": "1.1",
     "folders": [],
     "requests": [
@@ -14,12 +14,12 @@
             "method": "POST",
             "sortNum": 3750,
             "created": "2023-06-22T14:37:15.646Z",
-            "modified": "2023-06-22T14:37:15.646Z",
+            "modified": "2023-07-04T19:27:32.329Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"comment_1\": \"name, password and phone as required parameters\",\n  \"name\":\"Joao Pedro\",\n  \"password\": \"12345678\",\n  \"phone\": \"51998196456\"\n}",
+                "raw": "{\n  \"comment_1\": \"name, password and phone as required parameters\",\n  \"name\": \"João Pedro\",\n  \"password\": \"12345678\",\n  \"phone\": \"51998196456\"\n}",
                 "form": []
             },
             "tests": []
@@ -52,11 +52,11 @@
             "method": "GET",
             "sortNum": 7500,
             "created": "2023-06-22T14:37:15.652Z",
-            "modified": "2023-06-22T14:38:19.905Z",
+            "modified": "2023-07-04T19:24:41.985Z",
             "headers": [
                 {
-                    "name": "X-Authorization",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNmZjEyZWFkLWI1ZTktNDhmMy05YzdlLWJjNWQwODUxYTk2YSIsImlhdCI6MTY4NzQ0NDY4NiwiZXhwIjoxNjg3NDQ4Mjg2fQ.XSjj-4DWWdxZuVPC3wSRhwhIJa4mu7S4VfDPhS4ZU24"
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODQ5ODY1OCwiZXhwIjoxNjg4NTg1MDU4fQ.GMjy3kqZFhPi3HFNnl9dSSodsdwLU4tn3l2Tmy-_RVo"
                 }
             ],
             "params": [],
@@ -138,11 +138,11 @@
             "method": "GET",
             "sortNum": 15000,
             "created": "2023-06-22T14:37:15.656Z",
-            "modified": "2023-06-29T01:21:21.456Z",
+            "modified": "2023-07-04T21:23:18.364Z",
             "headers": [
                 {
                     "name": "Authorization",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODAwMTI0MywiZXhwIjoxNjg4MDg3NjQzfQ._CzzOSLYCkuSTO5m3JZMJOHhLqycHDRjYC2e8OL8IoU"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODUwNTcyNCwiZXhwIjoxNjg4NTkyMTI0fQ.0nkBHULcURsadz8ZuH9cEGRVfvf6n3ybO6qQyBsgq1Q"
                 }
             ],
             "params": [],
@@ -168,6 +168,30 @@
             "body": {
                 "type": "json",
                 "raw": "{\n  \"comment_1\": \"author or name\",\n  \"name\": \"THIS COLD HEAVEN: SEVEN SEASONS IN GREENLAND\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "d04be0f5-1d17-490e-9420-9e34d7af49a3",
+            "colId": "b48a6aaf-0321-4692-8fc2-ec08aa053840",
+            "containerId": "",
+            "name": "Update Book",
+            "url": "http://localhost:3000/api/v1/books",
+            "method": "PUT",
+            "sortNum": 15664,
+            "created": "2023-07-04T21:20:18.637Z",
+            "modified": "2023-07-04T21:37:34.640Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODUwNTcyNCwiZXhwIjoxNjg4NTkyMTI0fQ.0nkBHULcURsadz8ZuH9cEGRVfvf6n3ybO6qQyBsgq1Q"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"comment_1\": \"NAME, PHONE, ONE OR BOTH AS REQUIRED PARAMETER\",\n  \"name\": \"7 facas\",\n  \"newName\": \"7 facas\",\n  \"author\": \"Joso\",\n  \"publisher\": \"ibest\",\n  \"publiDate\":\"10agosto\"\n}",
                 "form": []
             },
             "tests": []
@@ -243,11 +267,11 @@
             "method": "POST",
             "sortNum": 16093.8,
             "created": "2023-06-22T14:37:15.661Z",
-            "modified": "2023-06-29T03:54:01.497Z",
+            "modified": "2023-07-03T15:01:15.472Z",
             "headers": [
                 {
                     "name": "Authorization",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODAwOTAyNywiZXhwIjoxNjg4MDk1NDI3fQ.OkczADBggi-80-_jMPfh15tVN178E7YUM927_WRs_ts"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk0YWYyZGIxLTkyYmYtNDBiZi05MWJkLTdhYTRkNzQzZGVlNSIsImlhdCI6MTY4ODM5NjQ2MywiZXhwIjoxNjg4NDgyODYzfQ.JsL5TTbjuyoX-LroRzMEZQ9LGlfdi8aR9x85lXIPEks"
                 }
             ],
             "params": [],
